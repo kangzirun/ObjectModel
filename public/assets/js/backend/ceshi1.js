@@ -12,6 +12,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     multi_url: 'ceshi1/multi',
                     import_url: 'ceshi1/import',
                     table: 'ceshi1',
+                    
                 }
             });
 
@@ -110,9 +111,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        create: function () {
+            Controller.api.bindevent();
+        },
+        imageResult: function () {
+            if (imagStatus=='PROCESSING') {
+                location.reload(true);              
+            }
+            Controller.api.bindevent();
+        },
+        createimagetext: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
-                Form.api.bindevent($("form[role=form]"));
+                Form.api.bindevent($("form[role=form]"),function(data,ret){
+                    console.log('success',data,ret);  
+                    if(ret.code==1&&ret.msg=='文生图成功'){
+                        // location.href='imageResult?id='+data;  
+                        window.open('imageResult?id='+data.jobId+'&number='+data.number);
+                    }    
+                    if(ret.code==1&&ret.msg=='图文生图成功'){
+                        window.open('imageResult?id='+data.jobId+'&number='+data.number);
+                    }                         
+                },function(data,ret){
+                    console.log('error',data,ret);             
+                });
+                
             }
         }
     };
