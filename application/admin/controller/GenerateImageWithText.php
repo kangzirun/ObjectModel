@@ -7,7 +7,7 @@
 namespace app\admin\controller;
 
 use AlibabaCloud\SDK\Imageenhan\V20190930\Imageenhan;
-use AlibabaCloud\SDK\Imageenhan\V20190930\Models\GenerateImageWithTextAndImageRequest;
+use AlibabaCloud\SDK\Imageenhan\V20190930\Models\GenerateImageWithTextAndImageAdvanceRequest;
 use AlibabaCloud\SDK\Imageenhan\V20190930\Models\GenerateImageWithTextRequest;
 use AlibabaCloud\SDK\Imageenhan\V20190930\Models\GetAsyncJobResultRequest;
 use AlibabaCloud\Tea\Utils\Utils\RuntimeOptions;
@@ -16,7 +16,7 @@ use Exception;
 use think\addons\Controller;
 // require '../vendor/autoload.php';
 
-class GenerateImageWithText extends Controller
+class GenerateImageWithText
 {
 
   // 图+文==》图
@@ -28,7 +28,7 @@ class GenerateImageWithText extends Controller
   }
 
   // 文生图
-  public function text2image($text,$resolution,$number)
+  public function text2image($text, $resolution, $number)
   {
     // $text = $this->request->get("text", "一只戴着太阳镜的小松鼠在演奏吉他");
     // $number = $this->request->get("number", "1");
@@ -56,7 +56,7 @@ class GenerateImageWithText extends Controller
     // $jobId = $this->request->get("job");
     $client = self::createClient();
     $resp  =  $client->getAsyncJobResult(new GetAsyncJobResultRequest(["jobId" => $jobId]));
-    
+
     return $resp->body->data;
   }
   /**
@@ -68,12 +68,15 @@ class GenerateImageWithText extends Controller
   public static function createClient()
   {
 
+    /// 
+
+    $aiConfig = get_addon_config("aliai");
     // 最好重插件获得以下配置参数
     $config = Config::fromMap([
       // 必填，您的 AccessKey ID
-      "accessKeyId" => "LTAI5tEyxhtYW8byUrgGRWyv",
+      "accessKeyId" => "LTAI5tEyxhtYW8byUrgGRWyv", //$aiConfig['AK']
       // 必填，您的 AccessKey Secret
-      "accessKeySecret" => "t64MeuPlc61oCVMjRSa79cwZbqBknA"
+      "accessKeySecret" => "t64MeuPlc61oCVMjRSa79cwZbqBknA" //$aiConfig['SK']
     ]);
     // 访问的域名
     $config->endpoint = "imageenhan.cn-shanghai.aliyuncs.com";
@@ -86,17 +89,12 @@ class GenerateImageWithText extends Controller
   public static function image2image($args)
   {
     $client = self::createClient();
-    $generateImageWithTextAndImageRequest = new GenerateImageWithTextAndImageRequest([
-      "text" =>$args['text'],
-      "resolution" => $args['resolution'],
-      "number" => $args['number'],
-      "similarity" => $args['similarity'],
-      "refImageUrl" => $args['refImageUrl'],
-      "aspectRatioMode" => $args['aspectRatioMode']
-    ]);
+
+
+    $generateImageWithTextAndImageRequest = new GenerateImageWithTextAndImageAdvanceRequest($args);
     $runtime = new RuntimeOptions([]);
     try {
-      $resp = $client->generateImageWithTextAndImageWithOptions($generateImageWithTextAndImageRequest, $runtime);
+      $resp = $client->generateImageWithTextAndImageAdvance($generateImageWithTextAndImageRequest, $runtime);
       # 获取整体结果
       return $resp->body->requestId;
     } catch (Exception $exception) {
