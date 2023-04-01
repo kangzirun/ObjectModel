@@ -156,8 +156,6 @@
                 <dd><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i> {:__('Append')}</a></dd>
                 <textarea name="row[json]" class="form-control hide" cols="30" rows="5"></textarea>
             </dl>
-
-
         </div>
     </div>
     <div class="form-group">
@@ -167,9 +165,9 @@
             <table class="table fieldlist" data-name="row[multiplejson]" data-template="row[multiplejson]tpl">
                 <tr>
                     <td>{:__('multiplejson title')}</td>
-<td>{:__('multiplejson intro')}</td>
-<td>{:__('multiplejson author')}</td>
-<td>{:__('multiplejson age')}</td>
+                    <td>{:__('multiplejson intro')}</td>
+                    <td>{:__('multiplejson author')}</td>
+                    <td>{:__('multiplejson age')}</td>
                     <td width="90">{:__('Operate')}</td>
                 </tr>
                 <tr><td colspan="5">
@@ -180,9 +178,9 @@
             <script type="text/html" id="row[multiplejson]tpl">
                 <tr>
                     <td><input type="text" name="<%=name%>[<%=index%>][title]" class="form-control" value="<%=row.title%>"/></td>
-<td><input type="text" name="<%=name%>[<%=index%>][intro]" class="form-control" value="<%=row.intro%>"/></td>
-<td><input type="text" name="<%=name%>[<%=index%>][author]" class="form-control" value="<%=row.author%>"/></td>
-<td><input type="text" name="<%=name%>[<%=index%>][age]" class="form-control" value="<%=row.age%>"/></td>
+                    <td><input type="text" name="<%=name%>[<%=index%>][intro]" class="form-control" value="<%=row.intro%>"/></td>
+                    <td><input type="text" name="<%=name%>[<%=index%>][author]" class="form-control" value="<%=row.author%>"/></td>
+                    <td><input type="text" name="<%=name%>[<%=index%>][age]" class="form-control" value="<%=row.age%>"/></td>
                     <td width="90">
                         <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
                         <span class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>

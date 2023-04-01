@@ -1,0 +1,66 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" class="form-control" name="row[name]" type="text" value="{$row.name|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Identifier')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-identifier" class="form-control" name="row[identifier]" type="text" value="{$row.identifier|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Weigh')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-weigh" class="form-control" name="row[weigh]" type="number" value="{$row.weigh|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tag')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tag" class="form-control" data-role="tagsinput" name="row[tag]" type="text" value="{$row.tag|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Readswitch')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <input  id="c-readswitch" name="row[readswitch]" type="hidden" value="{$row.readswitch}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-readswitch" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success {eq name="$row.readswitch" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chartswitch')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <input  id="c-chartswitch" name="row[chartswitch]" type="hidden" value="{$row.chartswitch}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-chartswitch" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success {eq name="$row.chartswitch" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Datatype')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-datatype" class="form-control" name="row[datatype]" type="text" value="{$row.datatype|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Definition')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-definition" class="form-control " rows="5" name="row[definition]" cols="50">{$row.definition|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

@@ -1,29 +1,28 @@
 <form id="image_result-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
-    
+
     <?php if ($status=='PROCESSING') { ?>
     <div id="imageUrls" class="form-group">
-        图片正在加载中...     
+        <div class="alert alert-warning" role="alert">图片正在加载中...</div>
+
     </div>
     <?php } ?>
 
     <?php if ($status=='PROCESS_FAILED') { ?>
-        <div id="imageUrls" class="form-group">
-            图片生成失败！   
+    <div id="imageUrls" class="form-group">
+        <div class="alert alert-danger" role="alert">图片生成失败！{$errorMessage}</div>
+    </div>
+    <?php } ?>
+
+    <div id="container">
+        <div class="row">
+            {foreach name="imageUrls" id="item" index="i" empty=""}
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img src="{$item}" alt="...">
+                </div>
+            </div>
+            {/foreach}
         </div>
-        <?php } ?>
-
-    <div id="container"></div>
-    <script>
-        var container = document.getElementById("container");
-        var imageUrls = "{$imageUrls}";
-        var imagStatus="{$status}"
-        var number="{$number}"
-    
-        for (var i = 0; i < number; i++) {
-            var img = document.createElement("img"); 
-            img.setAttribute("src", imageUrls);  
-            container.appendChild(img); 
-        }
-    </script>
-
+    </div>
 </form>

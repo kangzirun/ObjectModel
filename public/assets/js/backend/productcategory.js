@@ -1,22 +1,17 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    function demo(value){
-        const jsondata=JSON.parse('{"maxLength":"1024","type":"string"}');
-        return jsondata.type;
-    }
-
     var Controller = {
         index: function () {
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'goods/index' + location.search,
-                    add_url: 'goods/add',
-                    edit_url: 'goods/edit',
-                    del_url: 'goods/del',
-                    multi_url: 'goods/multi',
-                    import_url: 'goods/import',
-                    table: 'goods',
+                    index_url: 'productcategory/index' + location.search,
+                    add_url: 'productcategory/add',
+                    edit_url: 'productcategory/edit',
+                    del_url: 'productcategory/del',
+                    multi_url: 'productcategory/multi',
+                    import_url: 'productcategory/import',
+                    table: 'productcategory',
                 }
             });
 
@@ -25,17 +20,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
-                pk: 'goodsid',
-                sortName: 'goodsid',
+                pk: 'id',
+                sortName: 'weigh',
                 columns: [
                     [
-                        {checkbox: true},            
-                        {field: 'goodsname', title: __('Goodsname'), operate: 'LIKE'},
-                        {field: 'goodsimage', title: __('Goodsimage'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
-                        {field: 'goodsunit', title: __('Goodsunit')},
-                        {field: 'goodsprice', title: __('Goodsprice'), operate:'BETWEEN'},
-                        {field: 'goodscategory_id', title: __('Goodscategory_id')},
+                        {checkbox: true},
                         
+                        {field: 'name', title: __('产品分类名称'), operate: 'LIKE'},
+                        {field: 'nickname', title: __('备注'), operate: 'LIKE'},
+                        {field: 'image', title: __('封面'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
+                        {field: 'weigh', title: __('Weigh'), operate: false},
+                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
