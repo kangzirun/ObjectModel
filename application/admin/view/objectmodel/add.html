@@ -23,9 +23,9 @@
         <div class="col-xs-12 col-sm-8">
             <!-- <input id="c-tag" class="form-control" data-role="tagsinput" name="row[tag]" type="text"> -->
             <select id="c-tag" class="form-control" data-role="tagsselect" name="row[tag]">
-                <option value="属性">属性</option>
-                <option value="功能">功能</option>
-                <option value="事件">事件</option>
+                <option value="properties">属性</option>
+                <option value="functions">功能</option>
+                <option value="events">事件</option>
             </select>
         </div>
     </div>
@@ -77,9 +77,9 @@
             <div class="col-xs-12 col-sm-8" >
                 <table>
                     <td>
-                        <tr><input type="number" name="row[min]" class="form-control" style="width: 150px;" placeholder="最小值"></tr>
+                        <tr><input type="number" name="row[integermin]" class="form-control" style="width: 150px;" placeholder="最小值"></tr>
                         <tr> 到 </tr>
-                        <tr><input type="number" name="row[max]" class="form-control" style="width: 150px;" placeholder="最大值"></tr>
+                        <tr><input type="number" name="row[integermax]" class="form-control" style="width: 150px;" placeholder="最大值"></tr>
                     </td>
                 </table>
             </div>    
@@ -87,13 +87,13 @@
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">单位:</label>
             <div class="col-xs-12 col-sm-8" >
-                <input type="text" name="row[unit]" class="form-control" style="width: 400px;" placeholder="请输入单位，例如：℃">
+                <input type="text" name="row[integerunit]" class="form-control" style="width: 400px;" placeholder="请输入单位，例如：℃">
             </div>    
         </div>
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">步长:</label>
             <div class="col-xs-12 col-sm-8" >
-                <input type="text" name="row[step]" class="form-control" style="width: 400px;" placeholder="请输入步长，例如：1">
+                <input type="text" name="row[integerstep]" class="form-control" style="width: 400px;" placeholder="请输入步长，例如：1">
             </div>    
         </div>
     </div>

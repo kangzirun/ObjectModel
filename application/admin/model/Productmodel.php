@@ -5,7 +5,7 @@ namespace app\admin\model;
 use think\Model;
 
 
-class Objectmodel extends Model
+class Productmodel extends Model
 {
 
     
@@ -13,7 +13,7 @@ class Objectmodel extends Model
     
 
     // 表名
-    protected $name = 'objectmodel';
+    protected $name = 'productmodel';
     
     // 自动写入时间戳字段
     protected $autoWriteTimestamp = 'integer';
@@ -48,6 +48,7 @@ class Objectmodel extends Model
         $datatype = ['properties'=>'属性','functions'=>'功能','events'=>'事件'];
         return $datatype[$value];
     }
+
 
     
 

@@ -96,6 +96,76 @@ class Product extends Backend
         }
         $this->success();
     }
+
+    /**
+     * 编辑
+     *
+     * @param $ids
+     * @return string
+     * @throws DbException
+     * @throws \think\Exception
+     */
+    public function edit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds) && !in_array($row[$this->dataLimitField], $adminIds)) {
+            $this->error(__('You have no permission'));
+        }
+        if (false === $this->request->isPost()) {
+            $this->view->assign('row', $row);
+            return $this->view->fetch();
+        }
+        $params = $this->request->post('row/a');
+        if (empty($params)) {
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $params = $this->preExcludeFields($params);
+        $result = false;
+        Db::startTrans();
+        try {
+            //是否采用模型验证
+            if ($this->modelValidate) {
+                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                $row->validateFailException()->validate($validate);
+            }
+            $length = 20;
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $mqttaccount = '';
+            $mqttpwd = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomIndex1 = rand(0, strlen($characters) - 1);
+                $randomIndex2 = rand(0, strlen($characters) - 1);
+                $mqttaccount .= $characters[$randomIndex1];
+                $mqttpwd .= $characters[$randomIndex2];
+            }
+            $params=[
+                'name'=>$params['name'],
+                'category_id'=>$params['category_id'],
+                'devicetype'=>$params['devicetype'],
+                'network'=>$params['network'],
+                'content'=>$params['content'],
+                'image'=>$params['image'],
+                'switch'=>$params['switch'],
+                'authentication'=>$params['authentication'],
+                'mqttaccount'=>$mqttaccount,
+                'mqttpwd'=>$mqttpwd,
+            ];
+            $result = $row->allowField(true)->save($params);
+            Db::commit();
+        } catch (ValidateException|PDOException|Exception $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        }
+        if (false === $result) {
+            $this->error(__('No rows were updated'));
+        }
+        $this->success();
+    }
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑

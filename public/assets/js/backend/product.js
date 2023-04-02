@@ -37,6 +37,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'authentication', title: __('认证方式'), operate: 'LIKE'},
                         {field: 'mqttaccount', title: __('Mqtt账号'), operate: 'LIKE'},
                         {field: 'mqttpwd', title: __('Mqtt密码'), operate: 'LIKE'},
+                        {field: 'buttons', title: __('编辑物模型'), table: table, events: Table.api.events.operate,formatter: Table.api.formatter.buttons,buttons:[
+                            {
+                                name: 'detail',
+                                text: __('编辑物模型'),
+                                title: __('物模型详情'),
+                                classname: 'btn btn-primary btn-xs btn-dialog',
+                                icon: 'fa fa-list',
+                                url: './productmodel/index?productid={id}',
+                                callback:function(data){
+
+                                },
+                                visible:function(row){
+                                    return true;
+                                }
+                            }
+                        ]
+                    },
                         {field: 'buttons', title: __('查看设备'), table: table, events: Table.api.events.operate,formatter: Table.api.formatter.buttons,buttons:[
                             {
                                 name: 'detail',
@@ -54,6 +71,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         ]
                     },
+
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

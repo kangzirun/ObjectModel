@@ -61,13 +61,24 @@ class Objectmodel extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                 $this->model->validateFailException()->validate($validate);
             }
-            if($params['datatype']=='integer'||$params['datatype']=='decimal'){
+            if($params['datatype']=='integer'){
+                $jsondata=array(
+                    'min'=>$params['integermin'],
+                    'max'=>$params['integermax'],
+                    'unit'=>$params['integerunit'],
+                    'step'=>$params['integerstep'],
+                    'type'=>$params['datatype']
+                );
+                $definition=json_encode($jsondata);                
+            }
+            if($params['datatype']=='decimal'){
                 $jsondata=array(
                     'min'=>$params['min'],
                     'max'=>$params['max'],
                     'unit'=>$params['unit'],
                     'step'=>$params['step'],
                     'type'=>$params['datatype']
+                    
                 );
                 $definition=json_encode($jsondata);                
             }
