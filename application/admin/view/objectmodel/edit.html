@@ -3,13 +3,15 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-name" class="form-control" name="row[name]" type="text" value="{$row.name|htmlentities}">
+            <input id="c-name" class="form-control" name="row[name]"
+             placeholder="请输入物模型名称，例如：温度" type="text" value="{$row.name|htmlentities}">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Identifier')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">标识符:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-identifier" class="form-control" name="row[identifier]" type="text" value="{$row.identifier|htmlentities}">
+            <input id="c-identifier" class="form-control" name="row[identifier]" 
+            placeholder="请输入标识符，例如：temperature" type="text" value="{$row.identifier|htmlentities}">
         </div>
     </div>
     <div class="form-group">
@@ -19,18 +21,23 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Tag')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">物模型类别:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-tag" class="form-control" data-role="tagsinput" name="row[tag]" type="text" value="{$row.tag|htmlentities}">
+            <!-- <input id="c-tag" class="form-control" data-role="tagsinput" name="row[tag]" type="text"> -->
+            <select id="c-tag" class="form-control" data-role="tagsselect" name="row[tag]" value="{$row.tag|htmlentities}">
+                <option value="properties">属性</option>
+                <option value="functions">功能</option>
+                <option value="events">事件</option>
+            </select>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Readswitch')}:</label>
         <div class="col-xs-12 col-sm-8">
             
-            <input  id="c-readswitch" name="row[readswitch]" type="hidden" value="{$row.readswitch}">
+            <input  id="c-readswitch" name="row[readswitch]" type="hidden" value="{$row.readswitch|htmlentities}">
             <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-readswitch" data-yes="1" data-no="0" >
-                <i class="fa fa-toggle-on text-success {eq name="$row.readswitch" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal text-gray fa-2x"></i>
             </a>
         </div>
     </div>
@@ -38,22 +45,186 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Chartswitch')}:</label>
         <div class="col-xs-12 col-sm-8">
             
-            <input  id="c-chartswitch" name="row[chartswitch]" type="hidden" value="{$row.chartswitch}">
+            <input  id="c-chartswitch" name="row[chartswitch]" type="hidden" value="{$row.chartswitch|htmlentities}">
             <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-chartswitch" data-yes="1" data-no="0" >
-                <i class="fa fa-toggle-on text-success {eq name="$row.chartswitch" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal text-gray fa-2x"></i>
             </a>
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Datatype')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">数据类型:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-datatype" class="form-control" name="row[datatype]" type="text" value="{$row.datatype|htmlentities}">
+            <!-- <input id="c-datatype" class="form-control" name="row[datatype]" type="text"> -->
+            <select id="c-datatype" class="form-control" name="row[datatype]" value="{$row.datatype|htmlentities}">
+                <option value="integer">整数</option>
+                <option value="decimal">小数</option>
+                <option value="bool">布尔</option>
+                <option value="enum">枚举</option>
+                <option value="string">字符串</option>
+                <option value="array">数组</option>
+                <option value="object">对象</option>
+            </select>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Definition')}:</label>
+    <!-- <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">数据定义:</label>
         <div class="col-xs-12 col-sm-8">
-            <textarea id="c-definition" class="form-control " rows="5" name="row[definition]" cols="50">{$row.definition|htmlentities}</textarea>
+            <textarea id="c-definition" class="form-control " rows="5" name="row[definition]" cols="50"></textarea>
+        </div>
+    </div> -->
+    <!--数据定义-->
+    <div id="integer" data-favisible="datatype=integer">
+        <div class="form-group">    
+            <label class="control-label col-xs-12 col-sm-2">取值范围:</label>
+            <div class="col-xs-12 col-sm-8" >
+                <table>
+                    <td>
+                        <tr><input type="number" name="row[integermin]" class="form-control" style="width: 150px;" placeholder="最小值"></tr>
+                        <tr> 到 </tr>
+                        <tr><input type="number" name="row[integermax]" class="form-control" style="width: 150px;" placeholder="最大值"></tr>
+                    </td>
+                </table>
+            </div>    
+        </div>
+        <div class="form-group">    
+            <label class="control-label col-xs-12 col-sm-2">单位:</label>
+            <div class="col-xs-12 col-sm-8" >
+                <input type="text" name="row[integerunit]" class="form-control" style="width: 400px;" placeholder="请输入单位，例如：℃">
+            </div>    
+        </div>
+        <div class="form-group">    
+            <label class="control-label col-xs-12 col-sm-2">步长:</label>
+            <div class="col-xs-12 col-sm-8" >
+                <input type="text" name="row[integerstep]" class="form-control" style="width: 400px;" placeholder="请输入步长，例如：1">
+            </div>    
+        </div>
+    </div>
+    <div id="decimal" data-favisible="datatype=decimal">
+        <div class="form-group">    
+            <label class="control-label col-xs-12 col-sm-2">取值范围:</label>
+            <div class="col-xs-12 col-sm-8" >
+                <table>
+                    <td>
+                        <tr><input type="number" name="row[min]" class="form-control" style="width: 150px;" placeholder="最小值"></tr>
+                        <tr> 到 </tr>
+                        <tr><input type="number" name="row[max]" class="form-control" style="width: 150px;" placeholder="最大值"></tr>
+                    </td>
+                </table>
+            </div>    
+        </div>
+        <div class="form-group">    
+            <label class="control-label col-xs-12 col-sm-2">单位:</label>
+            <div class="col-xs-12 col-sm-8" >
+                <input type="text" name="row[unit]" class="form-control" style="width: 400px;" placeholder="请输入单位，例如：℃">
+            </div>    
+        </div>
+        <div class="form-group">    
+            <label class="control-label col-xs-12 col-sm-2">步长:</label>
+            <div class="col-xs-12 col-sm-8" >
+                <input type="text" name="row[step]" class="form-control" style="width: 400px;" placeholder="请输入步长，例如：1">
+            </div>    
+        </div>
+    </div>
+    <div id="bool" data-favisible="datatype=bool">
+        <div class  ="form-group">
+            <label class="control-label col-xs-12 col-sm-2">布尔值:</label>
+            <div class="col-xs-12 col-sm-8">     
+                <input type="text" name="row[falseText]" class="form-control" style="width: 200px;" placeholder="例如：关闭">（0 值对应文本）
+                <br/>
+                <br/>
+                <input type="text" name="row[trueText]" class="form-control" style="width: 200px;" placeholder="例如：打开">（1 值对应文本）                      
+            </div>
+        </div>
+    </div>
+    <div id="enum" data-favisible="datatype=enum">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">枚举项:</label>
+            <div class="col-xs-12 col-sm-8">                
+                <table class="table fieldlist" data-name="row[multiplejson]" data-template="row[multiplejson]tpl">
+                    <tr>
+                        <td>参数值</td>
+                        <td>参数描述</td>
+                        <td width="90">{:__('Operate')}</td>
+                    </tr>
+                    <tr><td colspan="5">
+                    <a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i>添加枚举项</a>
+                    <textarea name="row[multiplejson]" class="form-control hide" cols="30" rows="5"></textarea>
+                    </td></tr>
+                </table>
+                <script type="text/html" id="row[multiplejson]tpl">
+                    <tr>
+                        <td><input type="text" name="<%=name%>[<%=index%>][value]" class="form-control" value="<%=row.value%>"/></td>
+                        <td><input type="text" name="<%=name%>[<%=index%>][text]" class="form-control" value="<%=row.text%>"/></td>
+                        <td width="90">
+                            <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                            <span class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>
+                        </td>
+                    </tr>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div id="string" data-favisible="datatype=string">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">字符串:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input type="text" name="row[maxLength]" class="form-control" style="width: 200px;" placeholder="例如：1024">（字符串的最大长度）
+            </div>
+        </div>
+    </div>
+    <div id="array" data-favisible="datatype=array">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">元素个数:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input type="number" name="row[arrayCount]" class="form-control" style="width: 200px;" placeholder="例如：5">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">数据类型:</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="radio">
+                    <label><input type="radio" name="row[arrayType]" value="integer">整数</label>   
+                    <label><input type="radio" name="row[arrayType]" value="decimal">小数</label>                 
+                    <label><input type="radio" name="row[arrayType]" value="string">字符串</label>
+                    <label><input type="radio" name="row[arrayType]" value="object">对象</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="object" data-favisible="datatype=object">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('对象参数')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                
+                <table class="table fieldlist" data-name="row[modelName]" data-template="row[modelName]tpl">
+                    <tr>
+                        <td>{:__('物模型名称')}</td>
+                        
+    
+                        <td width="90">{:__('Operate')}</td>
+                    </tr>
+                    <tr><td colspan="5">
+                    <a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i> {:__('添加参数')}</a>
+                    <textarea name="row[modelName]" class="form-control hide" cols="30" rows="5"></textarea>
+                    </td></tr>
+                </table>
+                <script type="text/html" id="row[modelName]tpl">
+                    <tr>
+                        <td>
+                            <select id="c-flag" class="form-control" multiple="" name="<%=name%>[<%=index%>][id]">
+                            {foreach name="modelNameList" item="vo"}
+                            <option value="{$vo['id']}" {in name="key" value="" }selected{/in}>{$vo['name']}</option>
+                            {/foreach}
+                            </select>
+                        </td>
+                        <td width="90">
+                            <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                            <span class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>
+                        </td>
+                    </tr>
+                </script>
+    
+            </div>
         </div>
     </div>
     <div class="form-group layer-footer">
@@ -63,4 +234,5 @@
             <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
         </div>
     </div>
+    
 </form>

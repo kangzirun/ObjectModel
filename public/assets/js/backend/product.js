@@ -1,5 +1,11 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    // function formatContent(value){
+    //     const content1=value.replace(/<p>/g, '');
+    //     const content2=content1.replace(/<br>/g,'');
+    //     return content2;
+    // }
+
     var Controller = {
         index: function () {
             // 初始化表格参数配置
@@ -32,6 +38,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'category_id', title: __('产品分类'), operate: 'LIKE'},
                         {field: 'devicetype', title: __('设备类型'), operate: 'LIKE'},
                         {field: 'network', title: __('联网方式'), operate: 'LIKE'},
+                        {field: 'content', title: __('简介'), operate: false, formatter:Table.api.formatter.content},
                         {field: 'image', title: __('产品图品'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
                         {field: 'switch', title: __('Switch'), searchList: {"1":__('Yes'),"0":__('No')}, table: table, formatter: Table.api.formatter.toggle},
                         {field: 'authentication', title: __('认证方式'), operate: 'LIKE'},
@@ -45,6 +52,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 classname: 'btn btn-primary btn-xs btn-dialog',
                                 icon: 'fa fa-list',
                                 url: './productmodel/index?productid={id}',
+                                callback:function(data){
+
+                                },
+                                visible:function(row){
+                                    return true;
+                                }
+                            }
+                        ]
+                    },
+                        {field: 'buttons', title: __('查看物模型'), table: table, events: Table.api.events.operate,formatter: Table.api.formatter.buttons,buttons:[
+                            {
+                                name: 'detail',
+                                text: __('查看物模型'),
+                                title: __('物模型详情'),
+                                classname: 'btn btn-primary btn-xs btn-dialog',
+                                icon: 'fa fa-list',
+                                url: './productmodel/check?productid={id}',
                                 callback:function(data){
 
                                 },

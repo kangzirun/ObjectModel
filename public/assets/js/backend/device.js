@@ -37,6 +37,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'longitude', title: __('Longitude'), operate: 'LIKE'},
                         {field: 'latitude', title: __('Latitude'), operate: 'LIKE'},
+                        {field: 'buttons', title: __('设备日志'), table: table, events: Table.api.events.operate,formatter: Table.api.formatter.buttons,buttons:[
+                            {
+                                name: 'detail',
+                                text: __('查看日志'),
+                                title: __('日志详情'),
+                                classname: 'btn btn-primary btn-xs btn-dialog',
+                                icon: 'fa fa-list',
+                                url: './devicelog/index',
+                                callback:function(data){
+
+                                },
+                                visible:function(row){
+                                    return true;
+                                }
+                            }
+                        ]
+                    },
+                        {field: 'buttons', title: __('监测数据'), table: table, events: Table.api.events.operate,formatter: Table.api.formatter.buttons,buttons:[
+                            {
+                                name: 'detail',
+                                text: __('监测数据'),
+                                title: __('监测数据'),
+                                classname: 'btn btn-primary btn-xs btn-dialog',
+                                icon: 'fa fa-list',
+                                url: './monitor/index',
+                                callback:function(data){
+
+                                },
+                                visible:function(row){
+                                    return true;
+                                }
+                            }
+                        ]
+                    },
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
@@ -50,6 +84,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.init({
                 extend: {
                     index_url: 'device/list' + location.search,
+                    add_url: 'device/add',
+                    edit_url: 'device/edit',
+                    del_url: 'device/del',
+                    multi_url: 'device/multi',
+                    import_url: 'device/import',
                     table: 'device',
                 }
             });
@@ -73,9 +112,44 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'image', title: __('设备图片'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
                         {field: 'deviceswitch', title: __('Deviceswitch'), searchList: {"1":__('Yes'),"0":__('No')}, table: table, formatter: Table.api.formatter.toggle},
                         {field: 'shadowswitch', title: __('Shadowswitch'), searchList: {"1":__('Yes'),"0":__('No')}, table: table, formatter: Table.api.formatter.toggle},
+                        {field: 'content', title: __('简介'), operate: false, formatter:Table.api.formatter.content},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'longitude', title: __('Longitude'), operate: 'LIKE'},
                         {field: 'latitude', title: __('Latitude'), operate: 'LIKE'},
+                        {field: 'buttons', title: __('设备日志'), table: table, events: Table.api.events.operate,formatter: Table.api.formatter.buttons,buttons:[
+                            {
+                                name: 'detail',
+                                text: __('查看日志'),
+                                title: __('日志详情'),
+                                classname: 'btn btn-primary btn-xs btn-dialog',
+                                icon: 'fa fa-list',
+                                url: './devicelog/index',
+                                callback:function(data){
+
+                                },
+                                visible:function(row){
+                                    return true;
+                                }
+                            }
+                        ]
+                    },
+                        {field: 'buttons', title: __('监测数据'), table: table, events: Table.api.events.operate,formatter: Table.api.formatter.buttons,buttons:[
+                            {
+                                name: 'detail',
+                                text: __('监测数据'),
+                                title: __('监测数据'),
+                                classname: 'btn btn-primary btn-xs btn-dialog',
+                                icon: 'fa fa-list',
+                                url: './monitor/index',
+                                callback:function(data){
+
+                                },
+                                visible:function(row){
+                                    return true;
+                                }
+                            }
+                        ]
+                    },
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

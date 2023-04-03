@@ -35,17 +35,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
         console.log(jsondata);
     }
-    function tagFormatter(value){
-        if(value=='properties'){
-            return '属性';
-        }
-        if(value=='functions'){
-            return '功能';
-        }
-        if(value=='events'){
-            return '事件';
-        }
-    }
     var Controller = {
         index: function () {
             // 初始化表格参数配置

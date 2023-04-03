@@ -61,79 +61,7 @@ class Objectmodel extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                 $this->model->validateFailException()->validate($validate);
             }
-            if($params['datatype']=='integer'){
-                $jsondata=array(
-                    'min'=>$params['integermin'],
-                    'max'=>$params['integermax'],
-                    'unit'=>$params['integerunit'],
-                    'step'=>$params['integerstep'],
-                    'type'=>$params['datatype']
-                );
-                $definition=json_encode($jsondata);                
-            }
-            if($params['datatype']=='decimal'){
-                $jsondata=array(
-                    'min'=>$params['min'],
-                    'max'=>$params['max'],
-                    'unit'=>$params['unit'],
-                    'step'=>$params['step'],
-                    'type'=>$params['datatype']
-                    
-                );
-                $definition=json_encode($jsondata);                
-            }
-            if($params['datatype']=='bool'){
-                $jsondata=array(
-                    'trueText'=>$params['trueText'],
-                    'falseText'=>$params['falseText'],
-                    'type'=>$params['datatype']
-                );
-                $definition=json_encode($jsondata); 
-            }
-            if($params['datatype']=='enum'){
-                $enumList=array();
-                $enumInfos=json_decode($params['multiplejson'],true);
-                foreach($enumInfos as $items){
-                    $text=$items['text'];
-                    $value=$items['value'];
-                    array_push($enumList,['text'=>$text,'value'=>$value]);
-                }
-                $jsondata=array(
-                    'type'=>$params['datatype'],
-                    'enumList'=>$enumList
-                );
-                $definition=json_encode($jsondata); 
-            }
-            if($params['datatype']=='string'){
-                $jsondata=array(
-                    'maxLength'=>$params['maxLength'],
-                    'type'=>$params['datatype']
-                );
-                $definition=json_encode($jsondata); 
-            }
-            if($params['datatype']=='array'){
-                $jsondata=array(
-                    'arrayCount'=>$params['arrayCount'],
-                    'arrayType'=>$params['arrayType'],
-                    'type'=>$params['datatype']
-                );
-                $definition=json_encode($jsondata); 
-            }
-            if($params['datatype']=='object'){
-                $enumList=array();
-                $objectInfos=json_decode($params['modelName'],true);
-                foreach($objectInfos as $infos){
-                    $datatype=ModelObjectmodel::where('id',$infos['id'])->value('definition');
-                    $objectname=ModelObjectmodel::where('id',$infos['id'])->value('name');
-                    array_push($enumList,['objectname'=>$objectname,'datatype'=>$datatype]);
-                }
-                $jsondata=array(
-                    'type'=>$params['datatype'],
-                    'objecttype'=>$enumList
-                );
-                $definition=json_encode($jsondata); 
-            }
-
+            $tool=new Tool;
             $params=[                                              
                 'name'=>$params['name'],
                 'identifier'=>$params['identifier'],
@@ -142,7 +70,7 @@ class Objectmodel extends Backend
                 'readswitch'=>$params['readswitch'],
                 'chartswitch'=>$params['chartswitch'],
                 'datatype'=>$params['datatype'],               
-                'definition'=>$definition              
+                'definition'=>$tool->dataJoint($params)              
             ];
             $result = $this->model->allowField(true)->save($params);
             Db::commit();
@@ -152,6 +80,64 @@ class Objectmodel extends Backend
         }
         if ($result === false) {
             $this->error(__('No rows were inserted'));
+        }
+        $this->success();
+    }
+
+    /**
+     * 编辑
+     *
+     * @param $ids
+     * @return string
+     * @throws DbException
+     * @throws \think\Exception
+     */
+    public function edit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds) && !in_array($row[$this->dataLimitField], $adminIds)) {
+            $this->error(__('You have no permission'));
+        }
+        if (false === $this->request->isPost()) {
+            $this->view->assign('row', $row);
+            return $this->view->fetch();
+        }
+        $params = $this->request->post('row/a');
+        if (empty($params)) {
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $params = $this->preExcludeFields($params);
+        $result = false;
+        Db::startTrans();
+        try {
+            //是否采用模型验证
+            if ($this->modelValidate) {
+                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                $row->validateFailException()->validate($validate);
+            }
+            $tag=$this->model::where('id',$ids)->value('tag');
+            if($tag=='events'){
+                $this->view->assign("tag",'事件');
+            }
+            if($tag=='properties'){
+                $this->view->assign("tag",'属性');
+            }
+            if($tag=='functions'){
+                $this->view->assign("tag",'功能');
+            }
+            $result = $row->allowField(true)->save($params);
+            Db::commit();
+        } catch (ValidateException|PDOException|Exception $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        }
+        if (false === $result) {
+            $this->error(__('No rows were updated'));
         }
         $this->success();
     }

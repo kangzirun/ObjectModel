@@ -100,79 +100,8 @@ class Productmodel extends Backend
                 $this->model->validateFailException()->validate($validate);
             }  
             $addtype=$params['addtype'];
-            if($addtype=='manual'){
-                
-                if($params['datatype']=='integer'){
-                    $jsondata=array(
-                        'min'=>$params['integermin'],
-                        'max'=>$params['integermax'],
-                        'unit'=>$params['integerunit'],
-                        'step'=>$params['integerstep'],
-                        'type'=>$params['datatype']
-                    );
-                    $definition=json_encode($jsondata);                
-                }
-                if($params['datatype']=='decimal'){
-                    $jsondata=array(
-                        'min'=>$params['min'],
-                        'max'=>$params['max'],
-                        'unit'=>$params['unit'],
-                        'step'=>$params['step'],
-                        'type'=>$params['datatype']
-                    );
-                    $definition=json_encode($jsondata);                
-                }
-                if($params['datatype']=='bool'){
-                    $jsondata=array(
-                        'trueText'=>$params['trueText'],
-                        'falseText'=>$params['falseText'],
-                        'type'=>$params['datatype']
-                    );
-                    $definition=json_encode($jsondata); 
-                }
-                if($params['datatype']=='enum'){
-                    $enumList=array();
-                    $enumInfos=json_decode($params['multiplejson'],true);
-                    foreach($enumInfos as $items){
-                        $text=$items['text'];
-                        $value=$items['value'];
-                        array_push($enumList,['text'=>$text,'value'=>$value]);
-                    }
-                    $jsondata=array(
-                        'type'=>$params['datatype'],
-                        'enumList'=>$enumList
-                    );
-                    $definition=json_encode($jsondata); 
-                }
-                if($params['datatype']=='string'){
-                    $jsondata=array(
-                        'maxLength'=>$params['maxLength'],
-                        'type'=>$params['datatype']
-                    );
-                    $definition=json_encode($jsondata); 
-                }
-                if($params['datatype']=='array'){
-                    $jsondata=array(
-                        'arrayCount'=>$params['arrayCount'],
-                        'arrayType'=>$params['arrayType'],
-                        'type'=>$params['datatype']
-                    );
-                    $definition=json_encode($jsondata); 
-                }
-                if($params['datatype']=='object'){
-                    $enumList=array();
-                    $objectInfos=json_decode($params['modelName'],true);
-                    foreach($objectInfos as $infos){
-                        $datatype=Objectmodel::where('id',$infos['id'])->value('definition');
-                        $objectname=Objectmodel::where('id',$infos['id'])->value('name');
-                        array_push($enumList,['objectname'=>$objectname,'datatype'=>$datatype]);
-                    }
-                    $jsondata=array(
-                        'type'=>$params['datatype'],
-                        'objecttype'=>$enumList
-                    );
-                    $definition=json_encode($jsondata); 
-                }   
+            if($addtype=='manual'){                
+                $tool=new Tool;  
                 $params=[                                              
                     'name'=>$params['name'],
                     'identifier'=>$params['identifier'],
@@ -181,34 +110,25 @@ class Productmodel extends Backend
                     'readswitch'=>$params['readswitch'],
                     'chartswitch'=>$params['chartswitch'],
                     'datatype'=>$params['datatype'],               
-                    'definition'=>$definition,  
+                    'definition'=>$tool->dataJoint($params), 
                     'productid'=>$addid      
                 ];
                 $result = $this->model->allowField(true)->save($params);  
             }   
             if($addtype=='convenience'){
+                $tool=new Tool;
                 $mdoelInfos=json_decode($params['convenienceName'],true);
                 Log::write($params['convenienceName']);
                 foreach($mdoelInfos as $infos){
-                    $productModel=Objectmodel::get($infos['id']);
-                    if($productModel->tag=='属性'){$tag='properties';}
-                    if($productModel->tag=='事件'){$tag='events';}
-                    if($productModel->tag=='功能'){$tag='functions';}
-                    if($productModel->datatype=='布尔'){$datatype='bool';}
-                    if($productModel->datatype=='整数'){$datatype='integer';}
-                    if($productModel->datatype=='小数'){$datatype='decimal';}
-                    if($productModel->datatype=='枚举'){$datatype='enum';}
-                    if($productModel->datatype=='数组'){$datatype='array';}
-                    if($productModel->datatype=='字符串'){$datatype='string';}
-                    if($productModel->datatype=='对象'){$datatype='object';}                   
+                    $productModel=Objectmodel::get($infos['id']);                  
                     $productInfo=[
                         'name'=>$productModel->name,
                         'identifier'=>$productModel->identifier,
                         'weigh'=>$productModel->weigh,
-                        'tag'=>$tag,
+                        'tag'=>$tool->transformTag($productModel->tag),
                         'readswitch'=>$productModel->readswitch,
                         'chartswitch'=>$productModel->chartswitch,
-                        'datatype'=>$datatype,               
+                        'datatype'=>$tool->transformDatatype($productModel->datatype),               
                         'definition'=>$productModel->definition,  
                         'productid'=>$addid   
                     ];                    
@@ -228,6 +148,41 @@ class Productmodel extends Backend
         $this->success();
     }
 
+    //查看你物模型
+    public function check(){
+        $productid=input('productid');
+
+        $definition=$this->model::where('productid',$productid)->column('definition');
+        $tag=$this->model::where('productid',$productid)->column('tag');
+        $identifier=$this->model::where('productid',$productid)->column('identifier');
+        $name=$this->model::where('productid',$productid)->column('name');
+
+        $properties=array();
+        $functions=array();
+        $events=array();
+        for($i=0;$i<count($definition);$i++){
+            if($tag[$i]=='properties'){
+                array_push($properties,['id'=>$identifier[$i],'name'=>$name[$i],'datatype'=>$definition[$i]]);                 
+            }
+            if($tag[$i]=='functions'){
+                array_push($functions,['id'=>$identifier[$i],'name'=>$name[$i],'datatype'=>$definition[$i]]);                             
+            }
+            if($tag[$i]=='events'){
+                array_push($events,['id'=>$identifier[$i],'name'=>$name[$i],'datatype'=>$definition[$i]]);                              
+            }
+        }
+        $jsondata=array(
+            'properties'=>$properties,
+            'functions'=>$functions,
+            'events'=>$events
+        );
+        Log::write($jsondata);        
+        $arraydata=json_decode(json_encode($jsondata),true);
+        print_r($arraydata);
+        // print_r(json_decode($arraydata['functions'][0][0],true)['name']);
+        // print_r($arraydata['functions'][1]['name']);✔
+        
+    }
 
 
 
