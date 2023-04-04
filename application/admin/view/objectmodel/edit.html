@@ -1,5 +1,7 @@
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
+
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -55,7 +57,7 @@
         <label class="control-label col-xs-12 col-sm-2">数据类型:</label>
         <div class="col-xs-12 col-sm-8">
             <!-- <input id="c-datatype" class="form-control" name="row[datatype]" type="text"> -->
-            <select id="c-datatype" class="form-control" name="row[datatype]" value="{$row.datatype|htmlentities}">
+            <select id="c-datatype" class="form-control" name="row[datatype]" value="">
                 <option value="integer">整数</option>
                 <option value="decimal">小数</option>
                 <option value="bool">布尔</option>
@@ -73,41 +75,75 @@
         </div>
     </div> -->
     <!--数据定义-->
+   
     <div id="integer" data-favisible="datatype=integer">
+        <?php
+            $integermin='';
+            $integermax='';
+            $integerunit='';
+            $integerstep='';
+            if($datatype=='integer'){
+                $integermin=$min;
+                $integermax=$max;
+                $integerunit=$unit;
+                $integerstep=$step;
+            }
+        ?>
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">取值范围:</label>
             <div class="col-xs-12 col-sm-8" >
                 <table>
                     <td>
-                        <tr><input type="number" name="row[integermin]" class="form-control" style="width: 150px;" placeholder="最小值"></tr>
+                        <tr><input type="number" name="row[integermin]" class="form-control" 
+                            style="width: 150px;" placeholder="最小值" value="{$integermin}"></tr>
                         <tr> 到 </tr>
-                        <tr><input type="number" name="row[integermax]" class="form-control" style="width: 150px;" placeholder="最大值"></tr>
+                        <tr><input type="number" name="row[integermax]" class="form-control" 
+                            style="width: 150px;" placeholder="最大值" value="{$integermax}"></tr>
                     </td>
                 </table>
             </div>    
         </div>
+        
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">单位:</label>
             <div class="col-xs-12 col-sm-8" >
-                <input type="text" name="row[integerunit]" class="form-control" style="width: 400px;" placeholder="请输入单位，例如：℃">
+                <input type="text" name="row[integerunit]" class="form-control" 
+                style="width: 400px;" placeholder="请输入单位，例如：℃" value="{$integerunit}">
             </div>    
         </div>
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">步长:</label>
             <div class="col-xs-12 col-sm-8" >
-                <input type="text" name="row[integerstep]" class="form-control" style="width: 400px;" placeholder="请输入步长，例如：1">
+                <input type="text" name="row[integerstep]" class="form-control" 
+                style="width: 400px;" placeholder="请输入步长，例如：1" value="{$integerstep}">
             </div>    
         </div>
     </div>
+   
+   
     <div id="decimal" data-favisible="datatype=decimal">
+        <?php
+            $decimalmin='';
+            $decimalmax='';
+            $decimalunit='';
+            $decimalstep='';
+            if($datatype=='decimal'){
+                $decimalmin=$min;
+                $decimalmax=$max;
+                $decimalunit=$unit;
+                $decimalstep=$step;
+            }
+        ?>
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">取值范围:</label>
             <div class="col-xs-12 col-sm-8" >
                 <table>
                     <td>
-                        <tr><input type="number" name="row[min]" class="form-control" style="width: 150px;" placeholder="最小值"></tr>
+                        <tr><input type="number" name="row[min]" class="form-control"
+                             style="width: 150px;" placeholder="最小值" value="{$decimalmin}"></tr>
                         <tr> 到 </tr>
-                        <tr><input type="number" name="row[max]" class="form-control" style="width: 150px;" placeholder="最大值"></tr>
+                        <tr><input type="number" name="row[max]" class="form-control"
+                             style="width: 150px;" placeholder="最大值" value="{$decimalmax}"></tr>
                     </td>
                 </table>
             </div>    
@@ -115,27 +151,43 @@
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">单位:</label>
             <div class="col-xs-12 col-sm-8" >
-                <input type="text" name="row[unit]" class="form-control" style="width: 400px;" placeholder="请输入单位，例如：℃">
+                <input type="text" name="row[unit]" class="form-control" 
+                style="width: 400px;" placeholder="请输入单位，例如：℃" value="{$decimalunit}">
             </div>    
         </div>
         <div class="form-group">    
             <label class="control-label col-xs-12 col-sm-2">步长:</label>
             <div class="col-xs-12 col-sm-8" >
-                <input type="text" name="row[step]" class="form-control" style="width: 400px;" placeholder="请输入步长，例如：1">
+                <input type="text" name="row[step]" class="form-control"
+                 style="width: 400px;" placeholder="请输入步长，例如：1" value="{$decimalstep}">
             </div>    
         </div>
     </div>
+    
+    
     <div id="bool" data-favisible="datatype=bool">
+        <?php
+            $boolfalseText='';
+            $booltrueText='';
+            if($datatype=='bool'){
+                $boolfalseText=$falseText;
+                $booltrueText=$trueText;
+            }
+        ?>
         <div class  ="form-group">
             <label class="control-label col-xs-12 col-sm-2">布尔值:</label>
             <div class="col-xs-12 col-sm-8">     
-                <input type="text" name="row[falseText]" class="form-control" style="width: 200px;" placeholder="例如：关闭">（0 值对应文本）
+                <input type="text" name="row[falseText]" class="form-control" style="width: 200px;"
+                 placeholder="例如：关闭" value="{$boolfalseText}">（0 值对应文本）
                 <br/>
                 <br/>
-                <input type="text" name="row[trueText]" class="form-control" style="width: 200px;" placeholder="例如：打开">（1 值对应文本）                      
+                <input type="text" name="row[trueText]" class="form-control" style="width: 200px;"
+                 placeholder="例如：打开" value="{$booltrueText}">（1 值对应文本）                      
             </div>
         </div>
     </div>
+    
+    
     <div id="enum" data-favisible="datatype=enum">
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">枚举项:</label>
@@ -164,19 +216,39 @@
             </div>
         </div>
     </div>
+    
+    
     <div id="string" data-favisible="datatype=string">
+        <?php
+            $stringmaxLength='';
+            if($datatype=='string'){
+                $stringmaxLength=$maxLength;
+            }
+        ?>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">字符串:</label>
             <div class="col-xs-12 col-sm-8">
-                <input type="text" name="row[maxLength]" class="form-control" style="width: 200px;" placeholder="例如：1024">（字符串的最大长度）
+                <input type="text" name="row[maxLength]" class="form-control" 
+                style="width: 200px;" placeholder="例如：1024" value="{$stringmaxLength}">（字符串的最大长度）
             </div>
         </div>
     </div>
+    
+    
     <div id="array" data-favisible="datatype=array">
+        <?php
+            $arrayCountNum='';
+            $arrayType1='';
+            if($datatype=='array'){
+                $arrayCountNum=$arrayCount;
+                $arrayType1=$arrayType;
+            }
+        ?>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">元素个数:</label>
             <div class="col-xs-12 col-sm-8">
-                <input type="number" name="row[arrayCount]" class="form-control" style="width: 200px;" placeholder="例如：5">
+                <input type="number" name="row[arrayCount]" class="form-control" style="width: 200px;" 
+                placeholder="例如：5" value="{$arrayCountNum}">
             </div>
         </div>
         <div class="form-group">
@@ -191,6 +263,8 @@
             </div>
         </div>
     </div>
+    
+   
     <div id="object" data-favisible="datatype=object">
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('对象参数')}:</label>
@@ -227,6 +301,7 @@
             </div>
         </div>
     </div>
+    
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
@@ -234,5 +309,12 @@
             <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
         </div>
     </div>
+    <script>
+        var selectElement1 = document.getElementById("c-datatype");
+        selectElement1.value = '{$datatype}';
+        var selectElement2 = document.getElementById("c-tag");
+        selectElement2.value = "{$tag}";
+    </script>
+
     
 </form>

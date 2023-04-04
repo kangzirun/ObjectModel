@@ -104,6 +104,56 @@ class Objectmodel extends Backend
         }
         if (false === $this->request->isPost()) {
             $this->view->assign('row', $row);
+            //tag回显
+            $tag=$this->model::where('id',$ids)->value('tag');
+            if($tag=='events'){
+                $this->view->assign("tag",'events');
+            }
+            if($tag=='properties'){
+                $this->view->assign("tag",'properties');
+            }
+            if($tag=='functions'){
+                $this->view->assign("tag",'functions');
+            }
+            //datatype回显
+            $datatype=$this->model::where('id',$ids)->value('definition');
+            $definition=json_decode($datatype,true);
+            if($definition['type']=='integer'){
+                $this->view->assign("datatype",'integer');
+                $this->view->assign("min",$definition['min']);
+                $this->view->assign("max",$definition['max']);
+                $this->view->assign("step",$definition['step']);
+                $this->view->assign("unit",$definition['unit']);
+            }
+            if($definition['type']=='decimal'){
+                $this->view->assign("datatype",'decimal');
+                $this->view->assign("min",$definition['min']);
+                $this->view->assign("max",$definition['max']);
+                $this->view->assign("step",$definition['step']);
+                $this->view->assign("unit",$definition['unit']);
+            }
+            if($definition['type']=='string'){
+                $this->view->assign("datatype",'string');
+                $this->view->assign("maxLength",$definition['maxLength']);
+            }
+            if($definition['type']=='enum'){
+                $this->view->assign("datatype",'enum');
+            }
+            if($definition['type']=='array'){
+                $this->view->assign("datatype",'array');
+                $this->view->assign("arrayCount",$definition['arrayCount']);
+                $this->view->assign("arrayType",$definition['arrayType']);
+                
+            }
+            if($definition['type']=='bool'){
+                $this->view->assign("datatype",'bool');
+                $this->view->assign("trueText",$definition['trueText']);
+                $this->view->assign("falseText",$definition['falseText']);
+            }
+            if($definition['type']=='object'){
+                $this->view->assign("datatype",'object');
+            }
+
             return $this->view->fetch();
         }
         $params = $this->request->post('row/a');
@@ -120,16 +170,17 @@ class Objectmodel extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
                 $row->validateFailException()->validate($validate);
             }
-            $tag=$this->model::where('id',$ids)->value('tag');
-            if($tag=='events'){
-                $this->view->assign("tag",'事件');
-            }
-            if($tag=='properties'){
-                $this->view->assign("tag",'属性');
-            }
-            if($tag=='functions'){
-                $this->view->assign("tag",'功能');
-            }
+            $tool=new Tool;
+            $params=[                                              
+                'name'=>$params['name'],
+                'identifier'=>$params['identifier'],
+                'weigh'=>$params['weigh'],
+                'tag'=>$params['tag'],
+                'readswitch'=>$params['readswitch'],
+                'chartswitch'=>$params['chartswitch'],
+                'datatype'=>$params['datatype'],               
+                'definition'=>$tool->dataJoint($params)              
+            ];
             $result = $row->allowField(true)->save($params);
             Db::commit();
         } catch (ValidateException|PDOException|Exception $e) {

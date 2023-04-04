@@ -148,6 +148,115 @@ class Productmodel extends Backend
         $this->success();
     }
 
+    /**
+     * 编辑
+     *
+     * @param $ids
+     * @return string
+     * @throws DbException
+     * @throws \think\Exception
+     */
+    public function edit($ids = null)
+    {
+        $row = $this->model->get($ids);
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds) && !in_array($row[$this->dataLimitField], $adminIds)) {
+            $this->error(__('You have no permission'));
+        }
+        if (false === $this->request->isPost()) {
+            $this->view->assign('row', $row);
+            //tag回显
+            $tag=$this->model::where('id',$ids)->value('tag');
+            if($tag=='events'){
+                $this->view->assign("tag",'events');
+            }
+            if($tag=='properties'){
+                $this->view->assign("tag",'properties');
+            }
+            if($tag=='functions'){
+                $this->view->assign("tag",'functions');
+            }
+            //datatype回显
+            $datatype=$this->model::where('id',$ids)->value('definition');
+            $definition=json_decode($datatype,true);
+            if($definition['type']=='integer'){
+                $this->view->assign("datatype",'integer');
+                $this->view->assign("min",$definition['min']);
+                $this->view->assign("max",$definition['max']);
+                $this->view->assign("step",$definition['step']);
+                $this->view->assign("unit",$definition['unit']);
+            }
+            if($definition['type']=='decimal'){
+                $this->view->assign("datatype",'decimal');
+                $this->view->assign("min",$definition['min']);
+                $this->view->assign("max",$definition['max']);
+                $this->view->assign("step",$definition['step']);
+                $this->view->assign("unit",$definition['unit']);
+            }
+            if($definition['type']=='string'){
+                $this->view->assign("datatype",'string');
+                $this->view->assign("maxLength",$definition['maxLength']);
+            }
+            if($definition['type']=='enum'){
+                $this->view->assign("datatype",'enum');
+            }
+            if($definition['type']=='array'){
+                $this->view->assign("datatype",'array');
+                $this->view->assign("arrayCount",$definition['arrayCount']);
+                $this->view->assign("arrayType",$definition['arrayType']);
+                
+            }
+            if($definition['type']=='bool'){
+                $this->view->assign("datatype",'bool');
+                $this->view->assign("trueText",$definition['trueText']);
+                $this->view->assign("falseText",$definition['falseText']);
+            }
+            if($definition['type']=='object'){
+                $this->view->assign("datatype",'object');
+            }
+
+            return $this->view->fetch();
+        }
+        $params = $this->request->post('row/a');
+        if (empty($params)) {
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $params = $this->preExcludeFields($params);
+        $result = false;
+        Db::startTrans();
+        try {
+            //是否采用模型验证
+            if ($this->modelValidate) {
+                $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                $row->validateFailException()->validate($validate);
+            }
+            $tool=new Tool;
+            $params=[                                              
+                'name'=>$params['name'],
+                'identifier'=>$params['identifier'],
+                'weigh'=>$params['weigh'],
+                'tag'=>$params['tag'],
+                'readswitch'=>$params['readswitch'],
+                'chartswitch'=>$params['chartswitch'],
+                'datatype'=>$params['datatype'],               
+                'definition'=>$tool->dataJoint($params)              
+            ];
+            $result = $row->allowField(true)->save($params);
+            Db::commit();
+        } catch (ValidateException|PDOException|Exception $e) {
+            Db::rollback();
+            $this->error($e->getMessage());
+        }
+        if (false === $result) {
+            $this->error(__('No rows were updated'));
+        }
+        $this->success();
+    }
+
     //查看你物模型
     public function check(){
         $productid=input('productid');

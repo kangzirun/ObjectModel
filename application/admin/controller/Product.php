@@ -66,11 +66,23 @@ class Product extends Backend
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $mqttaccount = '';
             $mqttpwd = '';
+            $count='';
+            $pwd='';
             for ($i = 0; $i < $length; $i++) {
                 $randomIndex1 = rand(0, strlen($characters) - 1);
                 $randomIndex2 = rand(0, strlen($characters) - 1);
                 $mqttaccount .= $characters[$randomIndex1];
                 $mqttpwd .= $characters[$randomIndex2];
+            }
+            if($params['mqttaccount']==null){
+                $count=$mqttaccount;
+            }else{
+                $count=$params['mqttaccount'];
+            }
+            if($params['mqttpwd']==null){
+                $pwd=$mqttpwd;
+            }else{
+                $pwd=$params['mqttpwd'];
             }
             $params=[
                 'name'=>$params['name'],
@@ -81,8 +93,8 @@ class Product extends Backend
                 'image'=>$params['image'],
                 'switch'=>$params['switch'],
                 'authentication'=>$params['authentication'],
-                'mqttaccount'=>$mqttaccount,
-                'mqttpwd'=>$mqttpwd,
+                'mqttaccount'=>$count,
+                'mqttpwd'=>$pwd,
             ];
 
             $result = $this->model->allowField(true)->save($params);
@@ -133,15 +145,28 @@ class Product extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
                 $row->validateFailException()->validate($validate);
             }
+            //生成随机数
             $length = 20;
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $mqttaccount = '';
             $mqttpwd = '';
+            $count='';
+            $pwd='';
             for ($i = 0; $i < $length; $i++) {
                 $randomIndex1 = rand(0, strlen($characters) - 1);
                 $randomIndex2 = rand(0, strlen($characters) - 1);
                 $mqttaccount .= $characters[$randomIndex1];
                 $mqttpwd .= $characters[$randomIndex2];
+            }
+            if($params['mqttaccount']==null){
+                $count=$mqttaccount;
+            }else{
+                $count=$params['mqttaccount'];
+            }
+            if($params['mqttpwd']==null){
+                $pwd=$mqttpwd;
+            }else{
+                $pwd=$params['mqttpwd'];
             }
             $params=[
                 'name'=>$params['name'],
@@ -152,8 +177,8 @@ class Product extends Backend
                 'image'=>$params['image'],
                 'switch'=>$params['switch'],
                 'authentication'=>$params['authentication'],
-                'mqttaccount'=>$mqttaccount,
-                'mqttpwd'=>$mqttpwd,
+                'mqttaccount'=>$count,
+                'mqttpwd'=>$pwd,
             ];
             $result = $row->allowField(true)->save($params);
             Db::commit();
