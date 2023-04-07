@@ -70,7 +70,7 @@ class Tool{
             foreach($objectInfos as $infos){
                 $datatype=Objectmodel::where('id',$infos['id'])->value('definition');
                 $objectname=Objectmodel::where('id',$infos['id'])->value('name');
-                array_push($enumList,['objectname'=>$objectname,'datatype'=>$datatype]);
+                array_push($enumList,['objectid'=>$infos['id'],'objectname'=>$objectname,'datatype'=>$datatype]);
             }
             $jsondata=array(
                 'type'=>$params['datatype'],

@@ -3,7 +3,7 @@
 namespace app\admin\model;
 
 use think\Model;
-
+use think\Db;
 
 class Productmodel extends Model
 {
@@ -47,6 +47,13 @@ class Productmodel extends Model
     {
         $datatype = ['properties'=>'属性','functions'=>'功能','events'=>'事件'];
         return $datatype[$value];
+    }
+
+    public function getModelNameList(){
+        return Db::name('objectmodel')->field('id,name')->select();
+    }
+    public function getArrayType(){
+        return ['integer' => '整数', 'decimal' => '小数', 'string' => '字符串','object'=>'对象'];
     }
 
 

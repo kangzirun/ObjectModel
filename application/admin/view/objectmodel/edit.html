@@ -189,6 +189,12 @@
     
     
     <div id="enum" data-favisible="datatype=enum">
+        <?php
+            $enum='';
+            if($datatype=='enum'){
+                $enum=$enumList;
+            }
+        ?>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">枚举项:</label>
             <div class="col-xs-12 col-sm-8">                
@@ -200,7 +206,7 @@
                     </tr>
                     <tr><td colspan="5">
                     <a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i>添加枚举项</a>
-                    <textarea name="row[multiplejson]" class="form-control hide" cols="30" rows="5"></textarea>
+                    <textarea name="row[multiplejson]" class="form-control hide" cols="30" rows="5">{$enum}</textarea>
                     </td></tr>
                 </table>
                 <script type="text/html" id="row[multiplejson]tpl">
@@ -238,6 +244,7 @@
     <div id="array" data-favisible="datatype=array">
         <?php
             $arrayCountNum='';
+            $is1='';$is2='';$is3='';$is4='';
             $arrayType1='';
             if($datatype=='array'){
                 $arrayCountNum=$arrayCount;
@@ -255,10 +262,9 @@
             <label class="control-label col-xs-12 col-sm-2">数据类型:</label>
             <div class="col-xs-12 col-sm-8">
                 <div class="radio">
-                    <label><input type="radio" name="row[arrayType]" value="integer">整数</label>   
-                    <label><input type="radio" name="row[arrayType]" value="decimal">小数</label>                 
-                    <label><input type="radio" name="row[arrayType]" value="string">字符串</label>
-                    <label><input type="radio" name="row[arrayType]" value="object">对象</label>
+                    {foreach name="arrayTypeList" item="vo"}
+                    <label for="row[arrayType]-{$key}"><input id="row[arrayType]-{$key}" name="row[arrayType]" type="radio" value="{$key}" {in name="key" value="$arrayType1"}checked{/in} /> {$vo}</label> 
+                    {/foreach}
                 </div>
             </div>
         </div>
@@ -266,6 +272,14 @@
     
    
     <div id="object" data-favisible="datatype=object">
+        <?php
+        $object='';
+        $jsonobject='';
+        if($datatype=='object'){
+            $object=$objecttype;
+            $jsonobject=json_decode($objecttype,true);
+        }
+    ?>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('对象参数')}:</label>
             <div class="col-xs-12 col-sm-8">
@@ -279,16 +293,16 @@
                     </tr>
                     <tr><td colspan="5">
                     <a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i> {:__('添加参数')}</a>
-                    <textarea name="row[modelName]" class="form-control hide" cols="30" rows="5"></textarea>
+                    <textarea name="row[modelName]" class="form-control hide" cols="30" rows="5">{$object}</textarea>
                     </td></tr>
                 </table>
                 <script type="text/html" id="row[modelName]tpl">
                     <tr>
                         <td>
-                            <select id="c-flag" class="form-control" multiple="" name="<%=name%>[<%=index%>][id]">
+                            <select id="c-flag" class="form-control" name="<%=name%>[<%=index%>][id]">                           
                             {foreach name="modelNameList" item="vo"}
-                            <option value="{$vo['id']}" {in name="key" value="" }selected{/in}>{$vo['name']}</option>
-                            {/foreach}
+                            <option value="{$vo['id']}" name="<%=name%>[<%=index%>][objectid]" {in name="key" value="" }selected{/in}>{$vo['name']}</option>
+                            {/foreach}                            
                             </select>
                         </td>
                         <td width="90">

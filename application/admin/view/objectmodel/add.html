@@ -181,10 +181,9 @@
             <label class="control-label col-xs-12 col-sm-2">数据类型:</label>
             <div class="col-xs-12 col-sm-8">
                 <div class="radio">
-                    <label><input type="radio" name="row[arrayType]" value="integer">整数</label>   
-                    <label><input type="radio" name="row[arrayType]" value="decimal">小数</label>                 
-                    <label><input type="radio" name="row[arrayType]" value="string">字符串</label>
-                    <label><input type="radio" name="row[arrayType]" value="object">对象</label>
+                    {foreach name="arrayTypeList" item="vo"}
+                    <label for="row[arrayType]-{$key}"><input id="row[arrayType]-{$key}" name="row[arrayType]" type="radio" value="{$key}" {in name="key" value="integer"}checked{/in} /> {$vo}</label> 
+                    {/foreach}
                 </div>
             </div>
         </div>
@@ -209,7 +208,7 @@
                 <script type="text/html" id="row[modelName]tpl">
                     <tr>
                         <td>
-                            <select id="c-flag" class="form-control" multiple="" name="<%=name%>[<%=index%>][id]">
+                            <select id="c-flag" class="form-control" name="<%=name%>[<%=index%>][id]">
                             {foreach name="modelNameList" item="vo"}
                             <option value="{$vo['id']}" {in name="key" value="" }selected{/in}>{$vo['name']}</option>
                             {/foreach}

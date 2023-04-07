@@ -29,7 +29,8 @@ class Objectmodel extends Backend
     {
         parent::_initialize();
         $this->model = new \app\admin\model\Objectmodel;
-        $this->view->assign("modelNameList", Db::name('objectmodel')->field('id,name')->select());
+        $this->view->assign("modelNameList", $this->model->getModelNameList());
+        $this->view->assign("arrayTypeList", $this->model->getArrayType());
     }
 
         /**
@@ -138,6 +139,7 @@ class Objectmodel extends Backend
             }
             if($definition['type']=='enum'){
                 $this->view->assign("datatype",'enum');
+                $this->view->assign("enumList",json_encode($definition['enumList']));               
             }
             if($definition['type']=='array'){
                 $this->view->assign("datatype",'array');
@@ -152,6 +154,7 @@ class Objectmodel extends Backend
             }
             if($definition['type']=='object'){
                 $this->view->assign("datatype",'object');
+                $this->view->assign("objecttype",json_encode($definition['objecttype']));
             }
 
             return $this->view->fetch();
