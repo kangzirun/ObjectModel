@@ -289,7 +289,9 @@ class Productmodel extends Backend
         );
         Log::write($jsondata);        
         $arraydata=json_decode(json_encode($jsondata),true);
-        print_r($arraydata);
+        // print_r($arraydata);
+        $this->view->assign('arraydata',json_encode($jsondata));
+        return $this->view->fetch();
         // print_r(json_decode($arraydata['functions'][0][0],true)['name']);
         // print_r($arraydata['functions'][1]['name']);✔
         

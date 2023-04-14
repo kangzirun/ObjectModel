@@ -300,9 +300,9 @@
                     <tr>
                         <td>
                             <select id="c-flag" class="form-control" name="<%=name%>[<%=index%>][id]">                           
-                            {foreach name="modelNameList" item="vo"}
-                            <option value="{$vo['id']}" name="<%=name%>[<%=index%>][objectid]" {in name="key" value="" }selected{/in}>{$vo['name']}</option>
-                            {/foreach}                            
+                                {foreach name="modelNameList" item="vo"}
+                                    <option value="{$vo['id']}" {in name="key" value="" }selected{/in}>{$vo['name']}</option>                                            
+                                {/foreach}                         
                             </select>
                         </td>
                         <td width="90">
