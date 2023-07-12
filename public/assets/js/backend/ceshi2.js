@@ -31,7 +31,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'attachfile', title: __('Attachfile'), operate: false, formatter: Table.api.formatter.file},
                         {field: 'attachfiles', title: __('Attachfiles'), operate: false, formatter: Table.api.formatter.files},
                         {field: 'status', title: __('Status'), searchList: {"0":__('Status 0'),"1":__('Status 1')}, formatter: Table.api.formatter.status},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate},
+                        {field: 'operate', title: __('测试'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,buttons:[
+                            {
+                                name: 'ajax',
+                                text: __('取消订单'),
+                                title: __('订单货品详情'),
+                                classname: 'btn btn-info btn-xs btn-dialog',
+                                icon: 'fa fa-list',
+                                url: './ceshi2/test',
+                                callback:function(data){
+
+                                },
+                                visible:function(row){
+                                    return true;
+                                }
+                            },
+                        ]
+
+                    }
                     ]
                 ]
             });

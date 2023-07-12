@@ -35,6 +35,7 @@ class Admin extends Backend
 
         $this->childrenAdminIds = $this->auth->getChildrenAdminIds($this->auth->isSuperAdmin());
         $this->childrenGroupIds = $this->auth->getChildrenGroupIds($this->auth->isSuperAdmin());
+        $this->view->assign("statusList", $this->model->getStatusList());
 
         $groupList = collection(AuthGroup::where('id', 'in', $this->childrenGroupIds)->select())->toArray();
 

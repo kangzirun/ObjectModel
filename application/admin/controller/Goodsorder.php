@@ -35,8 +35,9 @@ class Goodsorder extends Backend
         $this->view->assign("statusList", $this->model->getStatusList());
         $this->view->assign("goodsNameList", Db::name('goods')->field('goodsid,goodsname')->select());
     }
-    public function list(){
-        $id=input('id');
+    public function list()
+    {
+        $id = input('id');
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if (false === $this->request->isAjax()) {
@@ -47,38 +48,41 @@ class Goodsorder extends Backend
             return $this->selectpage();
         }
         Log::write($id);
-        $customer_id=$this->request->request('customer_id');
+        $customer_id = $this->request->request('customer_id');
         [$where, $sort, $order, $offset, $limit] = $this->buildparams();
         $list = $this->model
             ->where($where)
-            ->where('customer_id',$customer_id)
+            ->where('customer_id', $customer_id)
             ->order($sort, $order)
             ->paginate($limit);
         $result = ['total' => $list->total(), 'rows' => $list->items()];
         return json($result);
     }
 
-    public function updateStatus1(){
-        $id=input('id');
+    public function updateStatus1()
+    {
+        $id = input('id');
         $this->model->save([
             'status'  => '1'
-        ],['orderid' => $id]);
+        ], ['orderid' => $id]);
     }
-    public function updateStatus2(){
-        $id=input('id');
+    public function updateStatus2()
+    {
+        $id = input('id');
         $this->model->save([
             'status'  => '0'
-        ],['orderid' => $id]);
+        ], ['orderid' => $id]);
     }
-    public function updateStatus3(){
-        $id=input('id');
+    public function updateStatus3()
+    {
+        $id = input('id');
         $this->model->save([
             'status'  => '2'
-        ],['orderid' => $id]);
+        ], ['orderid' => $id]);
     }
 
-    
-        /**
+
+    /**
      * 添加
      *
      * @return string
@@ -107,38 +111,38 @@ class Goodsorder extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                 $this->model->validateFailException()->validate($validate);
             }
-            $goodsInfos=json_decode($params['goods'],true);
-            $total=0;
-            foreach($goodsInfos as $infos){
-                $goods=Goods::get($infos['goodsid']);
-                $total+=$goods->goodsprice*$infos['quantity'];
+            $goodsInfos = json_decode($params['goods'], true);
+            $total = 0;
+            foreach ($goodsInfos as $infos) {
+                $goods = Goods::get($infos['goodsid']);
+                $total += $goods->goodsprice * $infos['quantity'];
             };
-            $params=[
-                               
-                'customer_id'=>$params['customer_id'],
-                'address_id'=>$params['address_id'],
-                'name_id'=>$params['name_id'],
-                'phone_id'=>$params['phone_id'],
-                'status'=>$params['status'],
-                'totalprice'=>$total
+            $params = [
+
+                'customer_id' => $params['customer_id'],
+                'address_id' => $params['address_id'],
+                'name_id' => $params['name_id'],
+                'phone_id' => $params['phone_id'],
+                'status' => $params['status'],
+                'totalprice' => $total
             ];
             $result = $this->model->allowField(true)->save($params);
-            
-            foreach($goodsInfos as $infos){
-                $goods=Goods::get($infos['goodsid']);
-                $itemsInfo=[
-                    'itemsname'=>$goods->goodsname,
-                    'itemsimage'=>$goods->goodsimage,
-                    'itemscontent'=>$goods->goodscontent,
-                    'itemsunit'=>$goods->goodsunit,
-                    'itemsprice'=>$goods->goodsprice,
-                    'items_idss'=>$this->model->orderid,
-                    'itemsquantity'=>$infos['quantity']
+
+            foreach ($goodsInfos as $infos) {
+                $goods = Goods::get($infos['goodsid']);
+                $itemsInfo = [
+                    'itemsname' => $goods->goodsname,
+                    'itemsimage' => $goods->goodsimage,
+                    'itemscontent' => $goods->goodscontent,
+                    'itemsunit' => $goods->goodsunit,
+                    'itemsprice' => $goods->goodsprice,
+                    'items_idss' => $this->model->orderid,
+                    'itemsquantity' => $infos['quantity']
                 ];
                 Db::name('goodsorderitems')->data($itemsInfo)->insert();
             }
             Db::commit();
-        } catch (ValidateException|PDOException|Exception $e) {
+        } catch (ValidateException | PDOException | Exception $e) {
             Db::rollback();
             $this->error($e->getMessage());
         }
@@ -168,7 +172,7 @@ class Goodsorder extends Backend
         }
         $params = $this->preExcludeFields($params);
         $result = false;
-        
+
         Db::startTrans();
         try {
             //是否采用模型验证
@@ -178,22 +182,22 @@ class Goodsorder extends Backend
                 $row->validateFailException()->validate($validate);
             }
             $result = $row->allowField(true)->save($params);
-            $goodsInfos=json_decode($params['goods'],true);
-            foreach($goodsInfos as $infos){
-                $goods=Goods::get($infos['goodsid']);
-                $itemsInfo=[
-                    'itemsname'=>$goods->goodsname,
-                    'itemsimage'=>$goods->goodsimage,
-                    'itemscontent'=>$goods->goodscontent,
-                    'itemsunit'=>$goods->goodsunit,
-                    'itemsprice'=>$goods->goodsprice,
-                    'items_idss'=>$this->model->orderid,
-                    'itemsquantity'=>$infos['quantity']
+            $goodsInfos = json_decode($params['goods'], true);
+            foreach ($goodsInfos as $infos) {
+                $goods = Goods::get($infos['goodsid']);
+                $itemsInfo = [
+                    'itemsname' => $goods->goodsname,
+                    'itemsimage' => $goods->goodsimage,
+                    'itemscontent' => $goods->goodscontent,
+                    'itemsunit' => $goods->goodsunit,
+                    'itemsprice' => $goods->goodsprice,
+                    'items_idss' => $this->model->orderid,
+                    'itemsquantity' => $infos['quantity']
                 ];
-                Db::table('goodsorderitems')->where('itemsid',$row)->update($itemsInfo);
+                Db::table('goodsorderitems')->where('itemsid', $row)->update($itemsInfo);
             }
             Db::commit();
-        } catch (ValidateException|PDOException|Exception $e) {
+        } catch (ValidateException | PDOException | Exception $e) {
             Db::rollback();
             $this->error($e->getMessage());
         }
@@ -210,6 +214,4 @@ class Goodsorder extends Backend
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
-
 }

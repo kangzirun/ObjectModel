@@ -10,16 +10,23 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+use think\Route;
+
+
+Route::rule('businessman/:id', '/api/Businessman/search/id/:id');
+
+Route::rule('hello', '/api/Businessman/hello');
+
+
 return [
     //别名配置,别名只能是映射到控制器且访问时必须加上请求的方法
-    '__alias__'   => [
-    ],
+    '__alias__'   => [],
     //变量规则
-    '__pattern__' => [
-    ],
-//        域名绑定到模块
-//        '__domain__'  => [
-//            'admin' => 'admin',
-//            'api'   => 'api',
-//        ],
+    '__pattern__' => [],
+    //        域名绑定到模块
+    //        '__domain__'  => [
+    //            'admin' => 'admin',
+    //            'api'   => 'api',
+    //        ],
+
 ];

@@ -31,4 +31,9 @@ class Admin extends Model
         return $encrypt($password . $salt);
     }
 
+    public function getStatusList()
+    {
+        return ['normal' => __('在职'), 'hidden' => __('离职')];
+    }
+
 }

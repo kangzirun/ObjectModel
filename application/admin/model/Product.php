@@ -27,6 +27,16 @@ class Product extends Model
     protected $append = [
 
     ];
+
+
+    /**
+     * 关联产品类型表
+     * @return \think\model\relation\BelongsToMany
+     */
+    public function productcategory()
+    {
+        return $this->belongsTo('\app\admin\model\Productcategory', 'category_id','id');
+    }
     
 
     

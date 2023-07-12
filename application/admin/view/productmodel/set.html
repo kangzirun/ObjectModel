@@ -1,0 +1,128 @@
+<style>
+    .form-temporary {
+        display: block;
+        width: 40%;
+        height: 33px;
+        padding: 6px 12px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+
+    .form-temporary-v2 {
+        display: block;
+        width: 75%;
+        height: 33px;
+        padding: 6px 12px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .input-group input {
+        margin-right: 10px;
+    }
+
+    .input-group select {
+        margin-right: 10px;
+    }
+    .btn-color {
+        color: gray;
+    }
+</style>
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">设备模式:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-status" class="form-control" name="row[status]" type="text" value="{$status}" readonly>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">OTA升级:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-version" class="form-control" name="row[version]" type="text" value="{$version}" readonly>
+        </div>
+    </div>
+    <?php if ($showInteger){ ?>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{$integerName}</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-integer" width="20px" class="form-temporary" name="row[integer]" type="number"
+                    placeholder="" min="1" max="10">
+                <button class="btn btn-primary " onclick="submitData('controller2')">发送</button>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+
+    <?php if ($showBool){ ?>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{$boolName}</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-bool" name="row[bool]" type="hidden" value="0">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-bool" data-yes="1"
+                data-no="0">
+                <i class="fa fa-toggle-on text-success fa-flip-horizontal text-gray fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <?php } ?>
+
+    <?php if ($showEnum){ ?>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{$enumName}</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <select id="c-enum" class="form-temporary" name="<%=name%>[<%=index%>][id]">
+                    <option value="">请选择</option>
+                    {foreach name="enumList" item="vo"}
+                    <option value="{$vo['value']}" {in name="key" value="" }selected{/in}>{$vo['text']}</option>
+                    {/foreach}
+                </select>
+                <button class="btn btn-primary" onclick="submitData('controller2')">发送</button>
+                <script>
+                    document.getElementById("c-enum").selectedIndex = 0;
+                </script>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+
+    <?php if ($showString){ ?>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{$stringName}</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-string" class="form-temporary-v2" name="row[string]" type="text" placeholder="请输入字符串">
+                <button class="btn btn-primary" onclick="submitData('controller2')">发送</button>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+</form>

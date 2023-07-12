@@ -158,17 +158,17 @@ define(["jquery", "bootstrap", "backend", "table", "form"], function (
     createimagetext: function () {
       $.validator.config({
         rules: {
-            diyname: function (element) {
-                //如果直接返回文本，则表示失败的提示文字
-                //如果返回true表示成功
-                //如果返回Ajax对象则表示远程验证
-                if (!element.value.toString().match(0,1)) {
-                    return '请输入0-1之间的值';
-                }
-
+          diyname: function (element) {
+            //如果直接返回文本，则表示失败的提示文字
+            //如果返回true表示成功
+            //如果返回Ajax对象则表示远程验证
+            if (!element.value.toString().match(0, 1)) {
+              return '请输入0-1之间的值';
             }
+
+          }
         }
-    })
+      })
       Controller.api.bindevent()
     },
     api: {

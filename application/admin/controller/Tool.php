@@ -5,6 +5,7 @@ use app\admin\model\Objectmodel;
 
 class Tool{
 
+    //数据添加
     public function dataJoint($params){
         if($params['datatype']=='integer'){
             $jsondata=array(
@@ -79,6 +80,46 @@ class Tool{
             $definition=json_encode($jsondata); 
         }
         return $definition;
+    }
+    //数据回显
+    public function dataEcho($obj,$definition){
+        if($definition['type']=='integer'){
+            $obj->view->assign("datatype",'integer');
+            $obj->view->assign("min",$definition['min']);
+            $obj->view->assign("max",$definition['max']);
+            $obj->view->assign("step",$definition['step']);
+            $obj->view->assign("unit",$definition['unit']);
+        }
+        if($definition['type']=='decimal'){
+            $obj->view->assign("datatype",'decimal');
+            $obj->view->assign("min",$definition['min']);
+            $obj->view->assign("max",$definition['max']);
+            $obj->view->assign("step",$definition['step']);
+            $obj->view->assign("unit",$definition['unit']);
+        }
+        if($definition['type']=='string'){
+            $obj->view->assign("datatype",'string');
+            $obj->view->assign("maxLength",$definition['maxLength']);
+        }
+        if($definition['type']=='enum'){
+            $obj->view->assign("datatype",'enum');
+            $obj->view->assign("enumList",json_encode($definition['enumList']));               
+        }
+        if($definition['type']=='array'){
+            $obj->view->assign("datatype",'array');
+            $obj->view->assign("arrayCount",$definition['arrayCount']);
+            $obj->view->assign("arrayType",$definition['arrayType']);
+            
+        }
+        if($definition['type']=='bool'){
+            $obj->view->assign("datatype",'bool');
+            $obj->view->assign("trueText",$definition['trueText']);
+            $obj->view->assign("falseText",$definition['falseText']);
+        }
+        if($definition['type']=='object'){
+            $obj->view->assign("datatype",'object');
+            $obj->view->assign("objecttype",json_encode($definition['objecttype']));
+        }
     }
     public function transformTag($value){
         if($value=='属性'){$tag='properties';}

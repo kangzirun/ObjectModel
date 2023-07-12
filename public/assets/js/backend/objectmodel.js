@@ -64,7 +64,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},    
                         {field: 'name', title: __('Name'), operate: 'LIKE'},
                         {field: 'identifier', title: __('标识符'), operate: 'LIKE'},                        
-                        {field: 'tag', title: __('物模型类别'), operate: 'LIKE', formatter: Table.api.formatter.flag},
+                        {field: 'tag', title: __('物模型类别'), operate: 'LIKE', formatter: Table.api.formatter.label},
                         {field: 'readswitch', title: __('Readswitch'), searchList: {"1":__('Yes'),"0":__('No')}, table: table, formatter: Table.api.formatter.toggle},
                         {field: 'chartswitch', title: __('Chartswitch'), searchList: {"1":__('Yes'),"0":__('No')}, table: table, formatter: Table.api.formatter.toggle},
                         {field: 'datatype', title: __('数据类型'), operate: 'LIKE'},

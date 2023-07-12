@@ -56,6 +56,12 @@ class Productmodel extends Model
         return ['integer' => '整数', 'decimal' => '小数', 'string' => '字符串','object'=>'对象'];
     }
 
+    //根据设备id找此产品的物模型，并且通过标识符返回物模型名称
+    public function getNameByIdentifier($product_id,$identifier){
+        $result=Db::name('productmodel')->where('productid',$product_id)->where('identifier',$identifier)->value('name');
+        return $result;
+    }
+
 
     
 

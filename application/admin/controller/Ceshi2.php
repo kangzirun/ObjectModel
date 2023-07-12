@@ -3,6 +3,8 @@
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
+use think\config\driver\Json;
+use think\Db;
 
 /**
  * 
@@ -32,6 +34,39 @@ class Ceshi2 extends Backend
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
+    public function search()
+    {
+        // echo 'eqeq';
+        // $name=input('name');
+        $a='港';
+        $place='%'.$a.'%';
+        $results = Db::name('community')->where('name', 'like', $place)->find();
+        echo $results['price'];
+        // var_dump($results);
+        // print($results[1]);
 
+    }
+    public function getAll(){
+        $results = Db::name('news')->select();
 
+        foreach ($results as &$result) {
+            $categroy_id = $result['categroy_id'];
+            $categroy_name = Db::name('newscategroy')->where('categroy_id', $categroy_id)->value('name');
+            $result['categroy_name'] = $categroy_name;
+        }
+        $json = json_encode($results);
+        var_dump($json);
+
+    }
+
+    public function hello(){
+        // $name=input('name');
+        $name=1;
+        echo $name;
+    }
+    public function test(){
+        $id=input('id');
+        echo $id;
+        var_dump($id);
+    }
 }

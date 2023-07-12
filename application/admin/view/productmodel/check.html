@@ -1,43 +1,45 @@
 <style>
-    /* 样式设置 */
-    .json-key {
-      color: blue;
-    }
+  /* 样式设置 */
+  .json-key {
+    color: blue;
+  }
 
-    .json-value {
-      color: green;
-    }
+  .json-value {
+    color: green;
+  }
 
-    .json-null {
-      color: red;
-    }
+  .json-null {
+    color: red;
+  }
 
-    .json-toggle {
-      cursor: pointer;
-    }
+  .json-toggle {
+    cursor: pointer;
+  }
 
-    .json-toggle:hover {
-      text-decoration: underline;
-    }
+  .json-toggle:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <pre id="json-container"></pre>
 
+<div id="jsonOutput"></div>
+
 <script>
-    // var json = {
-    //     "name": "John",
-    //     "age": 30,
-    //     "city": "New York",
-    //     "address": {
-    //         "street": "123 Main St",
-    //         "zip": "12345"
-    //     }
-    // };
+  // var json = {
+  //     "name": "John",
+  //     "age": 30,
+  //     "city": "New York",
+  //     "address": {
+  //         "street": "123 Main St",
+  //         "zip": "12345"
+  //     }
+  // };
   // 将 JSON 对象转换为字符串
   var jsonString = '{$arraydata}'; // 第二个参数为 null，表示不传入 replacer 函数；第三个参数为缩进空格的数量，这里设置为 2
-//   var obj=JSON.parse(jsonString);
+  //   var obj=JSON.parse(jsonString);
 
   // 将 JSON 字符串显示在页面中
   document.getElementById("json-container").textContent = jsonString;
-//   console.log(json)
+  //   console.log(json)
 </script>

@@ -29,12 +29,12 @@ class Device extends Backend
     {
         parent::_initialize();
         $this->model = new \app\admin\model\Device;
-
+        $this->view->assign("statusList", $this->model->getStatusList());
     }
 
     public function list()
     {
-        $device_name=input('productname');
+        $product_id = input('productid');
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if (false === $this->request->isAjax()) {
@@ -44,11 +44,11 @@ class Device extends Backend
         if ($this->request->request('keyField')) {
             return $this->selectpage();
         }
-        Log::write($device_name);
         [$where, $sort, $order, $offset, $limit] = $this->buildparams();
         $list = $this->model
-            ->where($where)   
-            ->where('product_id',$device_name)        
+            ->with('product')
+            ->where($where)
+            ->where('product_id', $product_id)
             ->order($sort, $order)
             ->paginate($limit);
         $result = ['total' => $list->total(), 'rows' => $list->items()];
@@ -68,6 +68,7 @@ class Device extends Backend
         }
         [$where, $sort, $order, $offset, $limit] = $this->buildparams();
         $list = $this->model
+            ->with('product')
             ->where($where)
             ->order($sort, $order)
             ->paginate($limit);
@@ -75,7 +76,7 @@ class Device extends Backend
         return json($result);
     }
 
-        /**
+    /**
      * 添加
      *
      * @return string
@@ -104,22 +105,22 @@ class Device extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                 $this->model->validateFailException()->validate($validate);
             }
-            $product=new ModelProduct();
-            $image=$product::where('name',$params['product_id'])->value('image');
-            $params=[                                               
-                'name'=>$params['name'],
-                'product_id'=>$params['product_id'],
-                'version'=>$params['version'],
-                'image'=>$image,
-                'deviceswitch'=>$params['deviceswitch'],
-                'shadowswitch'=>$params['shadowswitch'],
-                'content'=>$params['content'],               
-                'longitude'=>$params['longitude'],
-                'latitude'=>$params['latitude']                
+            $product = new ModelProduct();
+            $image = $product::where('name', $params['product_id'])->value('image');
+            $params = [
+                'name' => $params['name'],
+                'product_id' => $params['product_id'],
+                'version' => $params['version'],
+                'image' => $image,
+                'deviceswitch' => $params['deviceswitch'],
+                'shadowswitch' => $params['shadowswitch'],
+                'content' => $params['content'],
+                'longitude' => $params['longitude'],
+                'latitude' => $params['latitude']
             ];
             $result = $this->model->allowField(true)->save($params);
             Db::commit();
-        } catch (ValidateException|PDOException|Exception $e) {
+        } catch (ValidateException | PDOException | Exception $e) {
             Db::rollback();
             $this->error($e->getMessage());
         }
@@ -136,6 +137,4 @@ class Device extends Backend
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
-
 }
