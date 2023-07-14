@@ -34,7 +34,8 @@
         "alibabacloud/tea-oss-utils": "^0.3.1",
         "alibabacloud/imageenhan-20190930": "1.0.11",
         "alibabacloud/darabonba-openapi": "0.2.9",
-        "bluerhinos/phpmqtt": "@dev"
+        "bluerhinos/phpmqtt": "@dev",
+        "simps/mqtt": "^1.4"
         
     },
     "config": {

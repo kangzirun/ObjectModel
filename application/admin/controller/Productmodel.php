@@ -300,16 +300,18 @@ class Productmodel extends Backend
     public function set()
     {
         //获取设备id
-        $deviceId = input('id');
+        $id = input('id');
+
         //根据设备id获取产品id，根据产品id获得类别为function的物模型
         $deviceModel = new Device();
-        $result = $deviceModel->getFunctionModelByDid($deviceId);
-        Log::write($result);
-        //根据设备拿到对应的设备
-        $device = $deviceModel->get($deviceId);
-        //显示设备模式和固件版本
+        $result = $deviceModel->getFunctionModelByDid($id);
+        //根据设备id拿到对应的设备
+        $device = $deviceModel->get($id);
+        //显示设备模式、固件版本、设备编号、产品编号
         $this->view->assign('status', $device['status'] == 0 ? '离线模式' : '在线模式');
         $this->view->assign('version', 'Version  ' . $device['version']);
+        $this->view->assign('deviceId', $device['deviceid']);
+        $this->view->assign('pid', $device['product_id']);
 
         // 根据您的逻辑条件设置相应的变量值
         $showInteger = false; // 是否显示integer<div>
@@ -323,24 +325,32 @@ class Productmodel extends Backend
             if ($datatype == 'integer') {
                 $showInteger = true;
                 $integerName = $data['name'];
+                $identifier= $data['identifier'];
                 $this->view->assign('integerName', $integerName);
+                $this->view->assign('integerId', $identifier);
             }
             if ($datatype == 'bool') {
                 $showBool = true;
                 $boolName = $data['name'];
+                $identifier= $data['identifier'];
                 $this->view->assign('boolName', $boolName);
+                $this->view->assign('boolId', $identifier);
             }
             if ($datatype == 'enum') {
                 $showEnum = true;
                 $enumName = $data['name'];
                 $enumList = json_decode($data['definition'], true)['enumList'];
+                $identifier= $data['identifier'];
                 $this->view->assign('enumList', $enumList);
                 $this->view->assign('enumName', $enumName);
+                $this->view->assign('enumId', $identifier);
             }
             if ($datatype == 'string') {
                 $showString = true;
                 $stringName = $data['name'];
+                $identifier= $data['identifier'];
                 $this->view->assign('stringName', $stringName);
+                $this->view->assign('stringId', $identifier);
             }
         }
 
@@ -352,6 +362,11 @@ class Productmodel extends Backend
         //根据拿到的结果判断数据类型
 
         return $this->view->fetch();
+    }
+
+    //向设备进行实时属性数据监测
+    public function monitor(){
+
     }
 
 

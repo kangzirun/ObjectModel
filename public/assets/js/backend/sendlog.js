@@ -5,13 +5,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'monitor/index' + location.search,
-                    add_url: 'monitor/add',
-                    edit_url: 'monitor/edit',
-                    del_url: 'monitor/del',
-                    multi_url: 'monitor/multi',
-                    import_url: 'monitor/import',
-                    table: 'monitor',
+                    index_url: 'sendlog/index' + location.search,
+                    add_url: 'sendlog/add',
+                    edit_url: 'sendlog/edit',
+                    del_url: 'sendlog/del',
+                    multi_url: 'sendlog/multi',
+                    import_url: 'sendlog/import',
+                    table: 'sendlog',
                 }
             });
 
@@ -25,13 +25,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        
-                        {field: 'tag', title: __('类型'), operate: 'LIKE', formatter: Table.api.formatter.flag},
-                        {field: 'pattern', title: __('模型'), operate: 'LIKE'},
-                        {field: 'createtime', title: __('时间'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
-                        {field: 'identifier', title: __('标识符'), operate: 'LIKE'},
-                        {field: 'action', title: __('动作')},
-                        
+                        // {field: 'id', title: __('Id')},
+                        {field: 'identifier', title: __('Identifier'),operate: 'LIKE'},
+                        {field: 'type', title: __('Type'), operate: 'LIKE',searchList: 
+                        {"property": '属性获取',"function": '服务下发',"ota":"OTA升级"},formatter:Table.api.formatter.flag},
+                        {field: 'value', title: __('Value'), operate: 'LIKE'},
+                        {field: 'deviceid', title: __('Deviceid'), operate: 'LIKE'},
+                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
+                        {field: 'detail', title: __('Detail'), operate: 'LIKE'},
+                        {field: 'remark', title: __('Remark'), operate: 'LIKE'},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

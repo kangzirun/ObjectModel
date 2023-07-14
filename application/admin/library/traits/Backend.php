@@ -69,6 +69,8 @@ trait Backend
      * 回收站
      *
      * @return string|Json
+     * 
+     * 
      * @throws \think\Exception
      */
     public function recyclebin()

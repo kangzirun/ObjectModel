@@ -9,19 +9,19 @@ use app\common\controller\Backend;
  *
  * @icon fa fa-circle-o
  */
-class Devicelog extends Backend
+class Sendlog extends Backend
 {
 
     /**
-     * Devicelog模型对象
-     * @var \app\admin\model\Devicelog
+     * Sendlog模型对象
+     * @var \app\admin\model\Sendlog
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\Devicelog;
+        $this->model = new \app\admin\model\Sendlog;
 
     }
 

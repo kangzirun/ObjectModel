@@ -27,7 +27,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         { checkbox: true },
-                        { field: 'id', title: __('设备编号') },
+                        { field: 'id', title: __('设备ID') },
+                        { field: 'deviceid', title: __('设备编号') },
                         { field: 'name', title: __('设备名称'), operate: 'LIKE' },
                         { field: 'product.name', title: __('所属产品'), operate: 'LIKE' },
                         { field: 'version', title: __('固件版本'), operate: 'BETWEEN' },
@@ -39,24 +40,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         { field: 'latitude', title: __('Latitude'), operate: 'LIKE' },
                         { field: 'status', title: __('Status'), searchList: { "0": __('离线'), "1": __('在线') }, formatter: Table.api.formatter.status },
                         { field: 'rssi', title: __('信号'), searchList: { "0": __('信号好'), "1": __('信号极好'), "2": __('信号差'), "3": __('信号一般') }, formatter: Table.api.formatter.status },
-                        // {
-                        //     field: 'buttons', title: __('设备日志'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [
-                        //         {
-                        //             name: 'detail',
-                        //             text: __('查看'),
-                        //             title: __('日志详情'),
-                        //             classname: 'btn btn-primary btn-xs btn-dialog',
-                        //             icon: 'fa fa-list',
-                        //             url: './devicelog/index',
-                        //             callback: function (data) {
-
-                        //             },
-                        //             visible: function (row) {
-                        //                 return true;
-                        //             }
-                        //         }
-                        //     ]
-                        // },
                         {
                             field: 'buttons', title: __('运行状态'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [
                                 {
@@ -101,7 +84,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     title: __('监测数据'),
                                     classname: 'btn btn-primary btn-xs btn-dialog',
                                     icon: 'fa',
-                                    url: './monitor/index',
+                                    url: '',
                                     callback: function (data) {
 
                                     },
@@ -146,6 +129,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         { checkbox: true },
                         { field: 'id', title: __('设备编号') },
+                        { field: 'deviceid', title: __('设备编号') },
                         { field: 'name', title: __('设备名称'), operate: 'LIKE' },
                         { field: 'product_id', title: __('所属产品'), operate: 'LIKE' },
                         { field: 'version', title: __('固件版本'), operate: 'BETWEEN' },
@@ -157,14 +141,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         { field: 'longitude', title: __('Longitude'), operate: 'LIKE' },
                         { field: 'latitude', title: __('Latitude'), operate: 'LIKE' },
                         {
-                            field: 'buttons', title: __('设备日志'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [
+                            field: 'buttons', title: __('运行状态'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [
                                 {
                                     name: 'detail',
-                                    text: __('查看日志'),
+                                    text: __('设置'),
+                                    title: __('设备详情'),
+                                    classname: 'btn btn-primary btn-xs btn-dialog',
+                                    icon: 'fa',
+                                    url: './productmodel/set?id={id}',
+                                    callback: function (data) {
+
+                                    },
+                                    visible: function (row) {
+                                        return true;
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            field: 'buttons', title: __('事件日志'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [
+                                {
+                                    name: 'detail',
+                                    text: __('查看'),
                                     title: __('日志详情'),
                                     classname: 'btn btn-primary btn-xs btn-dialog',
-                                    icon: 'fa fa-list',
-                                    url: './devicelog/index',
+                                    icon: 'fa',
+                                    url: './eventlog/index?id={id}',
                                     callback: function (data) {
 
                                     },
@@ -178,11 +180,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             field: 'buttons', title: __('监测数据'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [
                                 {
                                     name: 'detail',
-                                    text: __('监测数据'),
+                                    text: __('监测'),
                                     title: __('监测数据'),
                                     classname: 'btn btn-primary btn-xs btn-dialog',
-                                    icon: 'fa fa-list',
-                                    url: './monitor/index',
+                                    icon: 'fa',
+                                    url: '',
                                     callback: function (data) {
 
                                     },

@@ -17,6 +17,7 @@ Route::rule('businessman/:id', '/api/Businessman/search/id/:id');
 
 Route::rule('hello', '/api/Businessman/hello');
 
+Route::post('productmodel/api/send', '/api/Send/string');
 
 return [
     //别名配置,别名只能是映射到控制器且访问时必须加上请求的方法

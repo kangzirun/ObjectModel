@@ -28,9 +28,9 @@ class Businessman extends Api{
 
     }
 
-    public function hello($id){
+    public function hello(){
         // $name=input('name');
-        echo $id;
+        echo '555';
     }
 
 
