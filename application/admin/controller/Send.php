@@ -28,6 +28,41 @@ class Send extends Backend
         $this->model = new \app\admin\model\Productcategory;
     }
 
+    public function monitor(){
+        $mqttService = new MQTTService();
+
+        //topic后缀
+        $suffix = '/monitor/get';
+        //参数
+        $count = $this->request->post('count');
+        $interval = $this->request->post('interval');
+        $message = [
+            'count' => $count,
+            'interval' => $interval
+        ];
+
+        Log::write('count' . $count);
+        Log::write('interval' . $interval);
+
+        // $mqttService->send($pid, $deviceId, $message, $suffix);
+
+        //先设默认值，后续做逻辑处理
+        // $detail = '';
+
+        // $result = [
+        //     'identifier' => $identifier,
+        //     'type' => 'function',
+        //     'value' => $integerValue,
+        //     'deviceid' => $deviceId,
+        //     'detail' => $detail,
+        //     'remark' => $remark
+        // ];
+        // $sendlogModel = new Sendlog();
+        // $sendlogModel->create($result);
+
+        return $this->success();
+    }
+
     public function integer()
     {
         $mqttService = new MQTTService();

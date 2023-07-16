@@ -42,8 +42,9 @@ class Eventlog extends Model
         Db::name('eventlog')->insert($data);
     }
 
-    public function selectByTime($createtime){
-        return Db::name('eventlog')->where('createtime','>',$createtime)->where('type','property')->select();
+    public function selectByTime($createtime,$deviceId){
+        return Db::name('eventlog')->where('createtime','>',$createtime)
+        ->where('device_id',$deviceId)->where('type','property')->select();
     }
 
     

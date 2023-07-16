@@ -95,10 +95,10 @@
         }
         fetchDataAndDisplayCharts();
 
-        function updateChartData(currentTimestamp) {
-            
+        function updateChartData(currentTimestamp, deviceId) {
+
             axios
-                .get("recv?currentTimestamp="+currentTimestamp)
+                .get("recv?currentTimestamp=" + currentTimestamp + "&deviceId=" + deviceId)
                 .then(function (response) {
                     var latestData = response.data;
                     // console.log(latestData);
@@ -155,15 +155,47 @@
 
         }
 
+        function monitorStart(interval,count) {
+            
+            var body = "count=" + encodeURIComponent(count) +
+                "&interval=" + encodeURIComponent(interval);
+            fetch("{:url('send/monitor') }", {
+                method: 'POST', // 或者 'GET'，根据你的需求选择合适的 HTTP 方法
+                headers: {
+                    'Content-Type': 'application/json', // 根据你的需求设置适当的请求头
+                },
+                body: body
+            })
+                .then(function (response) {
+                    // 处理响应
+                    if (response.ok) {
+                        // 如果请求成功
+                        return response.json(); // 或者根据需要选择合适的响应处理方法
+                    } else {
+                        throw new Error('请求失败');
+                    }
+                })
+                .then(function (data) {
+                    // 处理控制器方法的返回数据
+                    console.log(data);
+                    // 其他处理逻辑...
+                })
+                .catch(function (error) {
+                    // 处理错误
+                    console.error(error);
+                });
+        }
+
         // 定义定时器变量
         var timer;
 
         function startTimer(interval, count) {
+            var deviceId = '{$deviceId}';
             var currentTimestamp = Date.now();
             var currentTimestampInSeconds = Math.floor(currentTimestamp / 1000);
             // 启动定时器
             timer = setInterval(function () {
-                updateChartData(currentTimestampInSeconds);
+                updateChartData(currentTimestampInSeconds, deviceId);
                 count--;
 
                 if (count <= 0) {
@@ -193,6 +225,7 @@
 
             // 调用 startTimer() 函数并传递监测间隔和监测次数
             startTimer(interval, count);
+            monitorStart(interval,count);
         });
         // 添加点击事件监听器
         stopButton.addEventListener('click', function (event) {

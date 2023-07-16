@@ -92,6 +92,24 @@ class Mqtt extends Api
 
         //发布实时监测
         if (strpos($topic, '/monitor/post')) {
+
+            // 1. 找到N个物模型
+            // 2. 写日志
+            foreach ($payload as $result) {
+                Log::write('消息' . json_encode($result));
+                $identifier = $result['id'];
+                $name = $productModel->getNameByIdentifier($productId, $identifier);
+                $items = [
+                    'type' => 'property',
+                    'mode' => '其他信息',
+                    'identifier' => $identifier,
+                    'action' => $name . ' : ' . $result['value'],
+                    'remark' => $result['remark'],
+                    'data' => json_encode($result),
+                    'device_id' => $clientid
+                ];
+                $eventlogModel->create($items);
+            }
         }
 
         //发布时钟同步

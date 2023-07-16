@@ -84,17 +84,19 @@ class Eventlog extends Backend
             $arrayContainer[] = $arrayData;
         }
         Log::write($arrayContainer);
+        $this->view->assign('deviceId',$deviceId);
         $this->view->assign('attributeDataArray', json_encode($arrayContainer));
 
         return $this->view->fetch();
     }
 
+    //实时从事件日志中抓取数据
     public function recv()
     {
         $currentTimestamp = input('currentTimestamp');
-        $createtime = input($currentTimestamp);
+        $deviceId=input('deviceId');
         Log::write($currentTimestamp);
-        $result = $this->model->selectByTime($currentTimestamp);
+        $result = $this->model->selectByTime($currentTimestamp,$deviceId);
         $arraydata = [];
         $productModel=new Productmodel();
         foreach ($result as $items) {
@@ -112,6 +114,12 @@ class Eventlog extends Backend
         Log::write($arraydata);
         return json($arraydata);
     }
+
+    //向设备进行属性监测数据统计
+    
+
+
+
 
 
 
