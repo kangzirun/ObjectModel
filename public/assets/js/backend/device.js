@@ -84,7 +84,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     title: __('监测数据'),
                                     classname: 'btn btn-primary btn-xs btn-dialog',
                                     icon: 'fa',
-                                    url: '',
+                                    url: './eventlog/monitor?deviceid={deviceid}',
                                     callback: function (data) {
 
                                     },

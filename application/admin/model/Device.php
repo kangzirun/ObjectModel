@@ -42,10 +42,17 @@ class Device extends Model
 
 
     //根据设备id获取产品id，根据产品id获得类别为function的物模型
-    public function getFunctionModelByDid($id){
+    public function getFunctionModelByDid($deviceId){
 
-        $product_id=Db::name('device')->where('id',$id)->value('product_id');
+        $product_id=Db::name('device')->where('deviceid',$deviceId)->value('product_id');
         return Db::name('productmodel')->where('productid',$product_id)->where('tag','functions')->select();    
+    }
+    
+    //根据设备id获取产品id，根据产品id获得类别为property的物模型
+    public function getPropertyModelByDid($deviceId){
+
+        $product_id=Db::name('device')->where('deviceid',$deviceId)->value('product_id');
+        return Db::name('productmodel')->where('productid',$product_id)->where('tag','properties')->select();    
     }
     
 

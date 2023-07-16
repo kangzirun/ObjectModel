@@ -105,19 +105,19 @@ class Device extends Backend
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
                 $this->model->validateFailException()->validate($validate);
             }
-                        //生成随机数
+            //生成随机数
             $length = 12;
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $deviceid='';
+            $deviceid = '';
             for ($i = 0; $i < $length; $i++) {
-                    $randomIndex1 = rand(0, strlen($characters) - 1);
-                    $deviceid .= $characters[$randomIndex1];
-                }
+                $randomIndex1 = rand(0, strlen($characters) - 1);
+                $deviceid .= $characters[$randomIndex1];
+            }
             $product = new ModelProduct();
             $image = $product::where('name', $params['product_id'])->value('image');
             $params = [
                 'name' => $params['name'],
-                'deviceid'=>$deviceid,
+                'deviceid' => $deviceid,
                 'product_id' => $params['product_id'],
                 'version' => $params['version'],
                 'image' => $image,
@@ -138,6 +138,8 @@ class Device extends Backend
         }
         $this->success();
     }
+
+
 
 
 

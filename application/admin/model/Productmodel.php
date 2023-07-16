@@ -8,9 +8,6 @@ use think\Db;
 class Productmodel extends Model
 {
 
-    
-
-    
 
     // 表名
     protected $name = 'productmodel';
@@ -60,6 +57,13 @@ class Productmodel extends Model
     public function getNameByIdentifier($product_id,$identifier){
         $result=Db::name('productmodel')->where('productid',$product_id)->where('identifier',$identifier)->value('name');
         return $result;
+    }
+
+    //根据identifier查询单位
+    public function getUnitById($identifier){
+        $definition = Db::name('productmodel')->where('identifier',$identifier)->where('tag','properties')->value('definition');
+        return json_decode($definition, true)['unit'];
+
     }
 
 

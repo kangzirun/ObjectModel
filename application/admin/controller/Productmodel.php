@@ -301,16 +301,17 @@ class Productmodel extends Backend
     {
         //获取设备id
         $id = input('id');
-
-        //根据设备id获取产品id，根据产品id获得类别为function的物模型
         $deviceModel = new Device();
-        $result = $deviceModel->getFunctionModelByDid($id);
         //根据设备id拿到对应的设备
         $device = $deviceModel->get($id);
+        //根据设备id获取产品id，根据产品id获得类别为function的物模型
+        $deviceId=$device['deviceid'];
+        $result = $deviceModel->getFunctionModelByDid($deviceId);
+
         //显示设备模式、固件版本、设备编号、产品编号
         $this->view->assign('status', $device['status'] == 0 ? '离线模式' : '在线模式');
         $this->view->assign('version', 'Version  ' . $device['version']);
-        $this->view->assign('deviceId', $device['deviceid']);
+        $this->view->assign('deviceId', $deviceId);
         $this->view->assign('pid', $device['product_id']);
 
         // 根据您的逻辑条件设置相应的变量值
@@ -364,10 +365,7 @@ class Productmodel extends Backend
         return $this->view->fetch();
     }
 
-    //向设备进行实时属性数据监测
-    public function monitor(){
 
-    }
 
 
 

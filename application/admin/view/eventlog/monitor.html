@@ -1,0 +1,209 @@
+<style>
+    .form-temporary {
+        display: block;
+        width: 20%;
+        height: 33px;
+        padding: 6px 12px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+</style>
+
+<form id="monitor-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">监测间隔:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-count" class="form-temporary" name="row[count]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">监测次数:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-interval" class="form-temporary" name="row[interval]" type="text">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button id="start" type="submit" class="btn btn-primary">开始监测</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button id="stop" type="submit" class="btn btn-primary">停止监测</button>
+        </div>
+    </div>
+
+    <div id="chartContainerWrapper"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+
+        var echartMap = {}
+        function generateCharts(attributeDataArray) {
+            var chartContainerWrapper = document.getElementById('chartContainerWrapper');
+            attributeDataArray.forEach(function (attributeData) {
+                var chartContainer = document.createElement('div');
+                chartContainer.style.width = '600px';
+                chartContainer.style.height = '400px';
+                chartContainerWrapper.appendChild(chartContainer);
+
+                var myChart = echarts.init(chartContainer);
+                var option = {
+                    title: {
+                        text: attributeData.title + '(单位 ' + attributeData.unit + ')',
+                        left: 'center'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: attributeData.attributeNames
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        type: 'line',
+                        data: attributeData.attributeValues
+                    }]
+                };
+                myChart.setOption(option);
+
+                echartMap[attributeData.identifier] = myChart
+            });
+        }
+
+        function fetchDataAndDisplayCharts() {
+
+            var attributeDataArray = {$attributeDataArray};
+            generateCharts(attributeDataArray);
+        }
+        fetchDataAndDisplayCharts();
+
+        function updateChartData(currentTimestamp) {
+            
+            axios
+                .get("recv?currentTimestamp="+currentTimestamp)
+                .then(function (response) {
+                    var latestData = response.data;
+                    // console.log(latestData);
+                    // [ {createtime ,indentify ,value ,name,unit} , {}]
+                    // { id : [{ctime,value} ,{ctime,value}]}
+                    // 创建空对象用于存储转换后的数据
+
+                    console.log(Array.isArray(latestData));
+                    var data = {};
+
+                    // 遍历数组，将数据按标识符进行分组
+                    latestData.forEach(function (item) {
+                        var identifier = item.identifier;
+                        var createtime = item.createtime;
+                        var title = item.title;
+                        var unit = item.unit;
+                        var value = parseFloat(item.value);
+
+                        // 将时间戳转换为字符串格式
+                        var ctime = new Date(createtime * 1000).toLocaleTimeString();
+
+                        // 创建数据项对象
+                        var dataItem = { createtime: ctime, value: value, title: title, unit: unit };
+
+                        // 将数据项添加到相应标识符的数组中
+                        if (!data[identifier]) {
+                            data[identifier] = [];
+                        }
+                        data[identifier].push(dataItem);
+                    });
+
+                    Object.keys(data).map(id => {
+                        let values = data[id]
+                        echartMap[id].setOption({
+                            title: {
+                                text: values[0]['title'] + '(单位 ' + values[0]['unit'] + ')',
+                                left: 'center'
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: values.map(z => z.createtime)
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                type: 'line',
+                                data: values.map(z => z.value)
+
+                            }]
+                        })
+                    })
+                })
+
+        }
+
+        // 定义定时器变量
+        var timer;
+
+        function startTimer(interval, count) {
+            var currentTimestamp = Date.now();
+            var currentTimestampInSeconds = Math.floor(currentTimestamp / 1000);
+            // 启动定时器
+            timer = setInterval(function () {
+                updateChartData(currentTimestampInSeconds);
+                count--;
+
+                if (count <= 0) {
+                    stopTimer(); // 当监测次数达到设定值后停止定时器
+                }
+            }, interval);
+        }
+
+        function stopTimer() {
+            // 停止定时器
+            clearInterval(timer);
+        }
+
+        var startButton = document.getElementById('start');
+        var stopButton = document.getElementById('stop');
+        // 添加点击事件监听器
+        startButton.addEventListener('click', function (event) {
+            event.preventDefault(); // 防止按钮触发默认提交行为
+
+            // 获取监测间隔和监测次数的输入框元素
+            var intervalInput = document.getElementById('c-count');
+            var countInput = document.getElementById('c-interval');
+
+            // 获取监测间隔和监测次数的值
+            var interval = parseInt(intervalInput.value);
+            var count = parseInt(countInput.value);
+
+            // 调用 startTimer() 函数并传递监测间隔和监测次数
+            startTimer(interval, count);
+        });
+        // 添加点击事件监听器
+        stopButton.addEventListener('click', function (event) {
+            event.preventDefault(); // 防止按钮触发默认提交行为
+
+            stopTimer();
+        });
+
+
+
+
+
+    </script>
+</form>
