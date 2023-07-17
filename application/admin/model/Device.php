@@ -40,6 +40,9 @@ class Device extends Model
         return $this->belongsTo('\app\admin\model\Product', 'product_id','id');
     }
 
+    public function getDeviceByDid($deviceId){
+        return Db::name('device')->where('deviceid',$deviceId)->find();
+    }
 
     //根据设备id获取产品id，根据产品id获得类别为function的物模型
     public function getFunctionModelByDid($deviceId){

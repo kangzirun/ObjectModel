@@ -53,6 +53,10 @@ class Eventlog extends Model
         ->where('device_id',$deviceId)->where('type','property')->where('topic','monitor')->limit($count)->select();
     }
 
+    public function selectByIdDesc($identifer,$deviceId){
+        return Db::name('eventlog')->order('id desc')->where('identifier',$identifer)
+        ->where('device_id',$deviceId)->where('type','property')->where('topic','property')->find();
+    }
     
 
     

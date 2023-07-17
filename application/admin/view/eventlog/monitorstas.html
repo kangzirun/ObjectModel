@@ -173,6 +173,8 @@
                         data[identifier].push(dataItem);
                     });
 
+                    console.log(data);
+
                     Object.keys(data).map(id => {
                         let values = data[id]
                         echartMap[id].setOption({

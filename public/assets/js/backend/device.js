@@ -48,7 +48,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     title: __('设备详情'),
                                     classname: 'btn btn-primary btn-xs btn-dialog',
                                     icon: 'fa',
-                                    url: './productmodel/set?id={id}',
+                                    url: './productmodel/set?deviceid={deviceid}',
                                     callback: function (data) {
 
                                     },
@@ -163,7 +163,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     title: __('设备详情'),
                                     classname: 'btn btn-primary btn-xs btn-dialog',
                                     icon: 'fa',
-                                    url: './productmodel/set?id={id}',
+                                    url: './productmodel/set?deviceid={deviceid}',
                                     callback: function (data) {
 
                                     },

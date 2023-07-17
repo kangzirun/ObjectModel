@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\Device;
+use app\admin\model\Eventlog;
 use app\admin\model\Objectmodel;
 use app\admin\model\Productmodel as ModelProductmodel;
 use app\common\controller\Backend;
@@ -300,12 +301,12 @@ class Productmodel extends Backend
     public function set()
     {
         //获取设备id
-        $id = input('id');
+        $deviceId = input('deviceid');
         $deviceModel = new Device();
         //根据设备id拿到对应的设备
-        $device = $deviceModel->get($id);
+        $device = $deviceModel->getDeviceByDid($deviceId);
+        Log::write($device);
         //根据设备id获取产品id，根据产品id获得类别为function的物模型
-        $deviceId=$device['deviceid'];
         $result = $deviceModel->getFunctionModelByDid($deviceId);
 
         //显示设备模式、固件版本、设备编号、产品编号
@@ -355,6 +356,8 @@ class Productmodel extends Backend
             }
         }
 
+
+
         // 将变量传递给视图模板
         $this->view->assign('showInteger', $showInteger);
         $this->view->assign('showBool', $showBool);
@@ -362,7 +365,62 @@ class Productmodel extends Backend
         $this->view->assign('showString', $showString);
         //根据拿到的结果判断数据类型
 
+        $resultBy = $deviceModel->getPropertyModelByDid($deviceId);
+        $arrayContainer  = [];
+        foreach ($resultBy as $items) {
+            $data = $items['definition'];
+            $name = $items['name'];
+            $identifier = $items['identifier'];
+            $unit = json_decode($data, true)['unit'];
+            Log::write($name);
+            Log::write($unit);
+
+            $arrayData = [
+                'title' => $name,
+                'unit' => $unit,
+                'identifier' => $identifier,
+                'attributeNames' => [],
+                'attributeValues' => []
+            ];
+            $arrayContainer[] = $arrayData;
+        }
+        $this->view->assign('attributeDataArray', json_encode($arrayContainer));
+
+        /**
+         * TODO
+         * 调用一次property/get
+         */
+
+         
         return $this->view->fetch();
+    }
+
+    public function recv(){
+        $deviceId = input('deviceid');
+        $deviceModel = new Device();
+        $productModel=new ModelProductmodel();
+        $result = $deviceModel->getPropertyModelByDid($deviceId);
+
+        $arrayData = [];
+        foreach($result as $item){
+            $eventLogModel=new Eventlog();
+            $identifier=$item['identifier'];
+            $data=$eventLogModel->selectByIdDesc($identifier,$deviceId);
+            $name = trim(explode(':', $data['action'])[0]);
+            $unit = $productModel->getUnitById($identifier);
+            $dataInput=[
+                'title'=>$name,
+                'unit'=>$unit,
+                'value'=>json_decode($data['data'], true)['value'],
+                'identifier'=>$identifier
+            ];
+            $arrayData[]=$dataInput;
+        }
+
+
+        
+        return json($arrayData);
+
     }
 
 

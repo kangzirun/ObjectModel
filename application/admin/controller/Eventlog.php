@@ -64,7 +64,6 @@ class Eventlog extends Backend
         $deviceId = input('deviceid');
         $deviceModel = new Device();
         $result = $deviceModel->getPropertyModelByDid($deviceId);
-        Log::write('result::' . json_encode($result));
         $arrayContainer  = [];
         foreach ($result as $items) {
             $data = $items['definition'];
@@ -83,7 +82,6 @@ class Eventlog extends Backend
             ];
             $arrayContainer[] = $arrayData;
         }
-        Log::write($arrayContainer);
         $this->view->assign('deviceId',$deviceId);
         $this->view->assign('attributeDataArray', json_encode($arrayContainer));
 
@@ -120,7 +118,6 @@ class Eventlog extends Backend
         $deviceId = input('deviceid');
         $deviceModel = new Device();
         $result = $deviceModel->getPropertyModelByDid($deviceId);
-        Log::write('result::' . json_encode($result));
         $arrayContainer  = [];
         foreach ($result as $items) {
             $data = $items['definition'];
@@ -139,7 +136,6 @@ class Eventlog extends Backend
             ];
             $arrayContainer[] = $arrayData;
         }
-        Log::write($arrayContainer);
         $this->view->assign('deviceId',$deviceId);
         $this->view->assign('attributeDataArray', json_encode($arrayContainer));
 

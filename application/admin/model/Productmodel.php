@@ -66,6 +66,8 @@ class Productmodel extends Model
 
     }
 
+    
+
 
     
 
