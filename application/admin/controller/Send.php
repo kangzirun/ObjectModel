@@ -28,6 +28,10 @@ class Send extends Backend
         $this->model = new \app\admin\model\Productcategory;
     }
 
+    public function propertyGet(){
+
+    }
+
     public function monitor(){
         $mqttService = new MQTTService();
 
@@ -36,6 +40,9 @@ class Send extends Backend
         //参数
         $count = $this->request->post('count');
         $interval = $this->request->post('interval');
+        $deviceId = $this->request->post('deviceId');
+        $pid = $this->request->post('pid');
+
         $message = [
             'count' => $count,
             'interval' => $interval
@@ -47,21 +54,26 @@ class Send extends Backend
         // $mqttService->send($pid, $deviceId, $message, $suffix);
 
         //先设默认值，后续做逻辑处理
-        // $detail = '';
+        $detail = '';
 
-        // $result = [
-        //     'identifier' => $identifier,
-        //     'type' => 'function',
-        //     'value' => $integerValue,
-        //     'deviceid' => $deviceId,
-        //     'detail' => $detail,
-        //     'remark' => $remark
-        // ];
-        // $sendlogModel = new Sendlog();
-        // $sendlogModel->create($result);
+        $remark = '场景联动触发';
+        $result = [
+            'identifier' => 'monitor',
+            'type' => 'function',
+            'value' => '监测间隔:'+$interval+' '+'监测次数:'+$count,
+            'deviceid' => $deviceId,
+            'detail' => $detail,
+            'remark' => $remark
+        ];
+        $sendlogModel = new Sendlog();
+        $sendlogModel->create($result);
 
         return $this->success();
     }
+
+    /**
+     * function物模型下发
+     */
 
     public function integer()
     {

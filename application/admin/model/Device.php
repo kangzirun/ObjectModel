@@ -44,6 +44,12 @@ class Device extends Model
         return Db::name('device')->where('deviceid',$deviceId)->find();
     }
 
+
+    //根据设备id获取产品id
+    public function getPidByDid($deviceId){
+        return Db::name('device')->where('deviceid',$deviceId)->value('product_id');
+    }
+
     //根据设备id获取产品id，根据产品id获得类别为function的物模型
     public function getFunctionModelByDid($deviceId){
 

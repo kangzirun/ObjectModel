@@ -155,10 +155,12 @@
 
         }
 
-        function monitorStart(interval,count) {
+        function monitorStart(interval,count,deviceId,pid) {
             
             var body = "count=" + encodeURIComponent(count) +
-                "&interval=" + encodeURIComponent(interval);
+                "&interval=" + encodeURIComponent(interval) +
+                "&deviceId=" + encodeURIComponent(deviceId) +
+                "&pid=" + encodeURIComponent(pid);
 
             fetch("{:url('send/monitor') }", {
                 method: 'POST', // 或者 'GET'，根据你的需求选择合适的 HTTP 方法
@@ -223,9 +225,10 @@
             // 获取监测间隔和监测次数的值
             var interval = parseInt(intervalInput.value);
             var count = parseInt(countInput.value);
-
+            var deviceId ='{$deviceId}';
+            var pid = {$pid};
             // 调用 startTimer() 函数并传递监测间隔和监测次数
-            monitorStart(interval,count);
+            monitorStart(interval,count,deviceId,pid);
             startTimer(interval, count);
             
         });

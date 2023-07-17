@@ -64,6 +64,7 @@ class Eventlog extends Backend
         $deviceId = input('deviceid');
         $deviceModel = new Device();
         $result = $deviceModel->getPropertyModelByDid($deviceId);
+        $pid = $deviceModel->getPidByDid($deviceId);
         $arrayContainer  = [];
         foreach ($result as $items) {
             $data = $items['definition'];
@@ -82,6 +83,7 @@ class Eventlog extends Backend
             ];
             $arrayContainer[] = $arrayData;
         }
+        $this->view->assign('pid',$pid);
         $this->view->assign('deviceId',$deviceId);
         $this->view->assign('attributeDataArray', json_encode($arrayContainer));
 
