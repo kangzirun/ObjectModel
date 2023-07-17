@@ -42,9 +42,15 @@ class Eventlog extends Model
         Db::name('eventlog')->insert($data);
     }
 
+    //实时监测
     public function selectByTime($createtime,$deviceId){
         return Db::name('eventlog')->where('createtime','>',$createtime)
-        ->where('device_id',$deviceId)->where('type','property')->select();
+        ->where('device_id',$deviceId)->where('type','property')->where('topic','monitor')->select();
+    }
+    //监测统计
+    public function selectByTimeRange($start,$end,$count,$deviceId){
+        return Db::name('eventlog')->where('createtime','between',[$start,$end])
+        ->where('device_id',$deviceId)->where('type','property')->where('topic','monitor')->limit($count)->select();
     }
 
     

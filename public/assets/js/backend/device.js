@@ -27,7 +27,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         { checkbox: true },
-                        { field: 'id', title: __('设备ID') },
+                        // { field: 'id', title: __('设备ID') },
                         { field: 'deviceid', title: __('设备编号') },
                         { field: 'name', title: __('设备名称'), operate: 'LIKE' },
                         { field: 'product.name', title: __('所属产品'), operate: 'LIKE' },
@@ -80,7 +80,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             field: 'buttons', title: __('监测数据'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [
                                 {
                                     name: 'detail',
-                                    text: __('监测'),
+                                    text: __('实时'),
                                     title: __('监测数据'),
                                     classname: 'btn btn-primary btn-xs btn-dialog',
                                     icon: 'fa',
@@ -91,9 +91,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     visible: function (row) {
                                         return true;
                                     }
+                                },
+                                {
+                                    name: 'detail',
+                                    text: __('统计'),
+                                    title: __('监测统计'),
+                                    classname: 'btn btn-primary btn-xs btn-dialog',
+                                    icon: 'fa',
+                                    url: './eventlog/monitorstas?deviceid={deviceid}',
+                                    callback: function (data) {
+
+                                    },
+                                    visible: function (row) {
+                                        return true;
+                                    }
                                 }
                             ]
                         },
+
                         { field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate }
                     ]
                 ]

@@ -17,18 +17,55 @@
         -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
         transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     }
+
+    .form-temporary1 {
+        display: block;
+        width: 90%;
+        height: 33px;
+        padding: 6px 12px;
+        font-size: 13px;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
 </style>
 
-<form id="monitor-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
-
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">监测间隔:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-interval" class="form-temporary" name="row[interval]" type="text">
+<form id="monitorstas-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="container">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">时间范围:</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="input-group date" id="datetimepicker-start">
+                            <input id="c-start" class="form-temporary1" name="row[start]" type="text">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="input-group date" id="datetimepicker-end">
+                            <input id="c-end" class="form-temporary1" name="row[end]" type="text">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">监测次数:</label>
+        <label class="control-label col-xs-12 col-sm-2">最大数量:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-count" class="form-temporary" name="row[count]" type="text">
         </div>
@@ -37,23 +74,32 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
-            <button id="start" type="submit" class="btn btn-primary">开始监测</button>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            <button id="stop" type="submit" class="btn btn-primary">停止监测</button>
+            <button id="select" type="submit" class="btn btn-primary">查询</button>
         </div>
     </div>
 
     <div id="chartContainerWrapper"></div>
 
+
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.0/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $('#datetimepicker-start').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss',
+                defaultDate: '2023-07-17 00:00:00'
+            });
+
+            $('#datetimepicker-end').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss',
+                defaultDate: '2023-07-17 23:59:59'
+            });
+        });
 
         var echartMap = {}
         function generateCharts(attributeDataArray) {
@@ -72,18 +118,22 @@
                     },
                     xAxis: {
                         type: 'category',
+                        boundaryGap: false,
                         data: attributeData.attributeNames
                     },
                     yAxis: {
                         type: 'value'
                     },
-                    series: [{
-                        type: 'line',
-                        data: attributeData.attributeValues
-                    }]
+                    series: [
+                        {
+                            data: attributeData.attributeValues,
+                            type: 'line',
+                            areaStyle: {}
+                        }
+                    ]
                 };
-                myChart.setOption(option);
 
+                myChart.setOption(option);
                 echartMap[attributeData.identifier] = myChart
             });
         }
@@ -95,20 +145,13 @@
         }
         fetchDataAndDisplayCharts();
 
-        function updateChartData(currentTimestamp, deviceId) {
+        function updateChartData(start, end, count, deviceId) {
 
             axios
-                .get("recv?currentTimestamp=" + currentTimestamp + "&deviceId=" + deviceId)
+                .get("recvByStas?start=" + start + "&end=" + end + "&count=" + count + "&deviceId=" + deviceId)
                 .then(function (response) {
                     var latestData = response.data;
-                    // console.log(latestData);
-                    // [ {createtime ,indentify ,value ,name,unit} , {}]
-                    // { id : [{ctime,value} ,{ctime,value}]}
-                    // 创建空对象用于存储转换后的数据
-
-                    console.log(Array.isArray(latestData));
                     var data = {};
-
                     // 遍历数组，将数据按标识符进行分组
                     latestData.forEach(function (item) {
                         var identifier = item.identifier;
@@ -139,6 +182,7 @@
                             },
                             xAxis: {
                                 type: 'category',
+                                boundaryGap: false,
                                 data: values.map(z => z.createtime)
                             },
                             yAxis: {
@@ -146,6 +190,7 @@
                             },
                             series: [{
                                 type: 'line',
+                                areaStyle: {},
                                 data: values.map(z => z.value)
 
                             }]
@@ -155,88 +200,31 @@
 
         }
 
-        function monitorStart(interval,count) {
-            
-            var body = "count=" + encodeURIComponent(count) +
-                "&interval=" + encodeURIComponent(interval);
-            fetch("{:url('send/monitor') }", {
-                method: 'POST', // 或者 'GET'，根据你的需求选择合适的 HTTP 方法
-                headers: {
-                    'Content-Type': 'application/json', // 根据你的需求设置适当的请求头
-                },
-                body: body
-            })
-                .then(function (response) {
-                    // 处理响应
-                    if (response.ok) {
-                        // 如果请求成功
-                        return response.json(); // 或者根据需要选择合适的响应处理方法
-                    } else {
-                        throw new Error('请求失败');
-                    }
-                })
-                .then(function (data) {
-                    // 处理控制器方法的返回数据
-                    console.log(data);
-                    // 其他处理逻辑...
-                })
-                .catch(function (error) {
-                    // 处理错误
-                    console.error(error);
-                });
-        }
-
-        // 定义定时器变量
-        var timer;
-
-        function startTimer(interval, count) {
-            var deviceId = '{$deviceId}';
-            var currentTimestamp = Date.now();
-            var currentTimestampInSeconds = Math.floor(currentTimestamp / 1000);
-            // 启动定时器
-            timer = setInterval(function () {
-                updateChartData(currentTimestampInSeconds, deviceId);
-                count--;
-
-                if (count <= 0) {
-                    stopTimer(); // 当监测次数达到设定值后停止定时器
-                }
-            }, interval);
-        }
-
-        function stopTimer() {
-            // 停止定时器
-            clearInterval(timer);
-        }
-
-        var startButton = document.getElementById('start');
-        var stopButton = document.getElementById('stop');
+        var startButton = document.getElementById('select');
         // 添加点击事件监听器
         startButton.addEventListener('click', function (event) {
             event.preventDefault(); // 防止按钮触发默认提交行为
 
-            // 获取监测间隔和监测次数的输入框元素
-            var intervalInput = document.getElementById('c-interval');
+            // 获取开始时间和结束时间和最大查询数量
+            var startInput = document.getElementById('c-start');
+            var endInput = document.getElementById('c-end');
             var countInput = document.getElementById('c-count');
 
             // 获取监测间隔和监测次数的值
-            var interval = parseInt(intervalInput.value);
+            
+            var start = Math.floor(moment(startInput.value, 'YYYY-MM-DD HH:mm:ss').valueOf() / 1000);
+            var end =Math.floor(moment(endInput.value, 'YYYY-MM-DD HH:mm:ss').valueOf() / 1000);
             var count = parseInt(countInput.value);
-
-            // 调用 startTimer() 函数并传递监测间隔和监测次数
-            startTimer(interval, count);
-            monitorStart(interval,count);
+            var deviceId = '{$deviceId}';
+            updateChartData(start, end, count, deviceId);
         });
-        // 添加点击事件监听器
-        stopButton.addEventListener('click', function (event) {
-            event.preventDefault(); // 防止按钮触发默认提交行为
-
-            stopTimer();
-        });
-
-
-
-
 
     </script>
+
+
+
+
+
+
+
 </form>

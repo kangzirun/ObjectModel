@@ -84,7 +84,8 @@ class Mqtt extends Api
                     'action' => '设备上线',
                     'remark' => '设备上线',
                     'data' => json_encode($payload),
-                    'device_id' => $clientid
+                    'device_id' => $clientid,
+                    'topic' => 'info'
                 ];
                 $eventlogModel->create($items);
             }
@@ -106,7 +107,8 @@ class Mqtt extends Api
                     'action' => $name . ' : ' . $result['value'],
                     'remark' => $result['remark'],
                     'data' => json_encode($result),
-                    'device_id' => $clientid
+                    'device_id' => $clientid,
+                    'topic' => 'monitor'
                 ];
                 $eventlogModel->create($items);
             }
@@ -136,7 +138,8 @@ class Mqtt extends Api
                     'action' => $name . ' : ' . $result['value'],
                     'remark' => $result['remark'],
                     'data' => json_encode($result),
-                    'device_id' => $clientid
+                    'device_id' => $clientid,
+                    'topic' => 'property'
                 ];
                 $eventlogModel->create($items);
             }
@@ -155,7 +158,8 @@ class Mqtt extends Api
                     'action' => $name . ' : ' . $result['value'],
                     'remark' => $result['remark'],
                     'data' => json_encode($result),
-                    'device_id' => $clientid
+                    'device_id' => $clientid,
+                    'topic' => 'function'
                 ];
                 $eventlogModel->create($items);
             }
@@ -175,7 +179,8 @@ class Mqtt extends Api
                     'action' => $name . ' : ' . $result['value'],
                     'remark' => $result['remark'],
                     'data' => json_encode($result),
-                    'device_id' => $clientid
+                    'device_id' => $clientid,
+                    'topic' => 'event'
                 ];
                 $eventlogModel->create($items);
             }

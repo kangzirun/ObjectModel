@@ -116,7 +116,68 @@ class Eventlog extends Backend
     }
 
     //向设备进行属性监测数据统计
-    
+    public function monitorstas(){
+        $deviceId = input('deviceid');
+        $deviceModel = new Device();
+        $result = $deviceModel->getPropertyModelByDid($deviceId);
+        Log::write('result::' . json_encode($result));
+        $arrayContainer  = [];
+        foreach ($result as $items) {
+            $data = $items['definition'];
+            $name = $items['name'];
+            $identifier = $items['identifier'];
+            $unit = json_decode($data, true)['unit'];
+            Log::write($name);
+            Log::write($unit);
+
+            $arrayData = [
+                'title' => $name,
+                'unit' => $unit,
+                'identifier' => $identifier,
+                'attributeNames' => [],
+                'attributeValues' => []
+            ];
+            $arrayContainer[] = $arrayData;
+        }
+        Log::write($arrayContainer);
+        $this->view->assign('deviceId',$deviceId);
+        $this->view->assign('attributeDataArray', json_encode($arrayContainer));
+
+        return $this->view->fetch();
+    }
+
+        //实时从事件日志中抓取数据
+        public function recvByStas()
+        {
+            $start = input('start');
+            $end = input('end');
+            $count = input('count');
+            $deviceId=input('deviceId');
+
+            Log::write('start'.$start);
+            Log::write('end'.$end);
+            Log::write('count'.$count);
+            Log::write('deviceId'.$deviceId);
+
+            $result = $this->model->selectByTimeRange($start,$end,$count,$deviceId);
+            $arraydata = [];
+            $productModel=new Productmodel();
+            foreach ($result as $items) {
+                $name = trim(explode(':', $items['action'])[0]);
+                $unit = $productModel->getUnitById($items['identifier']);
+                    $data = [
+                        'identifier' => $items['identifier'],
+                        'createtime' => $items['createtime'],
+                        'value' => json_decode($items['data'], true)['value'],
+                        'title' => $name,
+                        'unit' => $unit
+                    ];
+                $arraydata[] = $data;
+            }
+            Log::write($arraydata);
+            return json($arraydata);
+        }
+
 
 
 
