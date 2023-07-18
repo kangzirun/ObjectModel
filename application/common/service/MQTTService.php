@@ -49,9 +49,14 @@ class MQTTService
         $client->connect();
 
         // $topic = '/'+$pid+'/'+$clientId+'/info/get';
-        $topic = '/2/9d5F1j3W7g0r/info/get';
+        $topic = '/2/9d5F1j3W7g0r/function/get';
 
-        $result = json_encode($message);
+        $data = [
+            'id'=>'switch',
+            'value'=> 1,
+            'remark'=>'场景联动'
+        ];
+        $result = json_encode($data);
         $client->publish($topic, $result);
 
         // $topics=[

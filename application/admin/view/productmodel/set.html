@@ -65,9 +65,14 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">OTA升级:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-version" class="form-control" name="row[version]" type="text" value="{$version}" readonly>
+            <div class="input-group">
+                <input id="c-version" class="form-temporary-v2" name="row[version]" type="text" value="{$version}" readonly>
+                <button class="btn btn-primary "
+                    onclick="check('{$version}','{$deviceId}',{$pid})">检查更新</button>
+            </div>
         </div>
     </div>
+
     <?php if ($showInteger){ ?>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{$integerName}</label>
@@ -136,6 +141,37 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
+
+        //检查ota更新
+        function check(version,deviceId,pid){
+
+            var body = "version=" + encodeURIComponent(version) +
+                "&deviceId=" + encodeURIComponent(deviceId) +
+                "&pid=" + encodeURIComponent(pid);
+
+            fetch("{:url('send/ota') }", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded"
+                },
+                body: body
+            })
+                .then(function (response) {
+                    // 处理响应
+                    if (response.ok) {
+                        return response.text();  // 返回响应内容
+                    }
+                    throw new Error("Network response was not ok.");
+                })
+                .then(function (data) {
+                    // 处理响应数据
+                    console.log(data);
+                })
+                .catch(function (error) {
+                    // 处理错误
+                    console.log(error);
+                });
+        }
 
         //fuction指令下发
         function send(elementId, deviceId, identifier, pid) {

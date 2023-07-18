@@ -165,7 +165,7 @@
             fetch("{:url('send/monitor') }", {
                 method: 'POST', // 或者 'GET'，根据你的需求选择合适的 HTTP 方法
                 headers: {
-                    'Content-Type': 'application/json', // 根据你的需求设置适当的请求头
+                    "Content-type": "application/x-www-form-urlencoded"
                 },
                 body: body
             })
