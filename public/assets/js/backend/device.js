@@ -38,7 +38,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', autocomplete: false, formatter: Table.api.formatter.datetime },
                         { field: 'longitude', title: __('Longitude'), operate: 'LIKE' },
                         { field: 'latitude', title: __('Latitude'), operate: 'LIKE' },
-                        { field: 'status', title: __('Status'), searchList: { "0": __('离线'), "1": __('在线') }, formatter: Table.api.formatter.status },
+                        { field: 'status', title: __('Status'), searchList: { "0": __('离线'), "1": __('在线'), "2": __('禁用') }, formatter: Table.api.formatter.status },
                         { field: 'rssi', title: __('信号'), searchList: { "0": __('信号好'), "1": __('信号极好'), "2": __('信号差'), "3": __('信号一般') }, formatter: Table.api.formatter.status },
                         {
                             field: 'buttons', title: __('运行状态'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.buttons, buttons: [

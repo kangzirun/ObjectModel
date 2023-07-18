@@ -29,6 +29,31 @@ class Send extends Backend
         $this->model = new \app\admin\model\Productcategory;
     }
 
+
+    /**
+     * 订阅时钟同步
+     * @deviceSendTime 设备发送时间
+     * @serverSendTime 服务端接收时间
+     * @
+     */
+    public function ntp($deviceSendTime,$serverSendTime,$productId,$clientid){
+
+        $mqttService = new MQTTService();
+        //topic后缀
+        $suffix = '/ntp/get';
+        //服务端发送时间
+        $serverRecvTime=time();
+        $message=[
+            'deviceSendTime'=>$deviceSendTime,
+            'serverSendTime'=>$serverSendTime,
+            'serverRecvTime'=>$serverRecvTime
+        ];
+
+        $mqttService->send($productId,$clientid,$message,$suffix);
+
+
+    }
+
     /**
      * ota升级指令下发
      */
@@ -161,10 +186,9 @@ class Send extends Backend
             'detail' => $detail,
             'remark' => $remark
         ];
-        Log::write('result:::'.json_encode($result));
+        Log::write('result:::' . json_encode($result));
         $sendlogModel = new Sendlog();
         $sendlogModel->create($result);
-
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace app\api\controller;
 
+use app\admin\controller\Send;
 use app\admin\model\Device;
 use app\admin\model\Eventlog;
 use app\admin\model\Productmodel;
@@ -116,6 +117,10 @@ class Mqtt extends Api
 
         //发布时钟同步
         if (strpos($topic, '/ntp/post')) {
+            $serverSendTime=time();
+            $deviceSendTime=$payload['deviceSendTime'];
+            $send=new Send();
+            $send->ntp($deviceSendTime,$serverSendTime,$productId,$clientid);
         }
 
         /**
