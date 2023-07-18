@@ -76,7 +76,7 @@
                 <input id="c-integer" width="20px" class="form-temporary" name="row[integer]" type="number"
                     placeholder="" min="1" max="10">
                 <button class="btn btn-primary "
-                    onclick="integerClick('c-integer','{$deviceId}','{$integerId}',{$pid})">发送</button>
+                    onclick="send('c-integer','{$deviceId}','{$integerId}',{$pid})">发送</button>
             </div>
         </div>
     </div>
@@ -89,7 +89,7 @@
 
             <input id="c-bool" name="row[bool]" type="hidden" value="0">
             <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-bool" data-yes="1"
-                data-no="0" onclick="toggleSwitch('c-bool','{$deviceId}','{$boolId}',{$pid})">
+                data-no="0" onclick="send('c-bool','{$deviceId}','{$boolId}',{$pid})">
                 <i class="fa fa-toggle-on text-success fa-flip-horizontal text-gray fa-2x"></i>
             </a>
         </div>
@@ -108,7 +108,7 @@
                     {/foreach}
                 </select>
                 <button class="btn btn-primary"
-                    onclick="enumClick('c-enum','{$deviceId}','{$enumId}',{$pid})">发送</button>
+                    onclick="send('c-enum','{$deviceId}','{$enumId}',{$pid})">发送</button>
                 <script>
                     document.getElementById("c-enum").selectedIndex = 0;
                 </script>
@@ -124,7 +124,7 @@
             <div class="input-group">
                 <input id="c-string" class="form-temporary-v2" name="row[string]" type="text" placeholder="请输入字符串">
                 <button class="btn btn-primary"
-                    onclick="stringClick('c-string','{$deviceId}','{$stringId}',{$pid})">发送</button>
+                    onclick="send('c-string','{$deviceId}','{$stringId}',{$pid})">发送</button>
             </div>
         </div>
     </div>
@@ -136,113 +136,19 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
-        //整数提交
-        function integerClick(elementId, deviceId, identifier, pid) {
-            var integerValue = document.getElementById(elementId).value;
 
-            var body = "integerValue=" + encodeURIComponent(integerValue) +
+        //fuction指令下发
+        function send(elementId, deviceId, identifier, pid) {
+            var value = document.getElementById(elementId).value;
+            if(elementId=='c-bool'){
+                value = (value == '1' ? '0' : '1');
+            }
+            var body = "value=" + encodeURIComponent(value) +
                 "&deviceId=" + encodeURIComponent(deviceId) +
                 "&identifier=" + encodeURIComponent(identifier) +
                 "&pid=" + encodeURIComponent(pid);
 
-            fetch("{:url('send/integer') }", {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/x-www-form-urlencoded"
-                },
-                body: body
-            })
-                .then(function (response) {
-                    // 处理响应
-                    if (response.ok) {
-                        return response.text();  // 返回响应内容
-                    }
-                    throw new Error("Network response was not ok.");
-                })
-                .then(function (data) {
-                    // 处理响应数据
-                    console.log(data);
-                })
-                .catch(function (error) {
-                    // 处理错误
-                    console.log(error);
-                });
-        }
-        //bool提交
-        function toggleSwitch(elementId, deviceId, identifier, pid) {
-            var boolValue = document.getElementById(elementId).value;
-
-            var body = "boolValue=" + encodeURIComponent(boolValue == '1' ? '0' : '1') +
-                "&deviceId=" + encodeURIComponent(deviceId) +
-                "&identifier=" + encodeURIComponent(identifier) +
-                "&pid=" + encodeURIComponent(pid);
-            // 发送参数到控制器
-            fetch("{:url('send/bool') }", {
-                method: 'POST', // 根据需要选择请求方法，比如POST或GET
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: body
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        // 请求成功的处理逻辑
-                        console.log('请求成功');
-                        console.log(response);
-                        // 可以在这里更新页面或执行其他操作
-                    } else {
-                        // 请求失败的处理逻辑
-                        console.log('请求失败');
-                        console.log(response.statusText);
-                    }
-                })
-                .catch(function (error) {
-                    // 异常处理逻辑
-                    console.log('请求异常');
-                    console.log(error);
-                });
-        }
-        //枚举提交
-        function enumClick(elementId, deviceId, identifier, pid) {
-            var enumValue = document.getElementById(elementId).value;
-
-            var body = "enumValue=" + encodeURIComponent(enumValue) +
-                "&deviceId=" + encodeURIComponent(deviceId) +
-                "&identifier=" + encodeURIComponent(identifier) +
-                "&pid=" + encodeURIComponent(pid);
-            fetch("{:url('send/enum') }", {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/x-www-form-urlencoded"
-                },
-                body: body
-            })
-                .then(function (response) {
-                    // 处理响应
-                    if (response.ok) {
-                        return response.text();  // 返回响应内容
-                    }
-                    throw new Error("Network response was not ok.");
-                })
-                .then(function (data) {
-                    // 处理响应数据
-                    console.log(data);
-                })
-                .catch(function (error) {
-                    // 处理错误
-                    console.log(error);
-                });
-        }
-        //字符串提交
-        function stringClick(elementId, deviceId, identifier, pid) {
-            var stringValue = document.getElementById(elementId).value;
-
-            var body = "stringValue=" + encodeURIComponent(stringValue) +
-                "&deviceId=" + encodeURIComponent(deviceId) +
-                "&identifier=" + encodeURIComponent(identifier) +
-                "&pid=" + encodeURIComponent(pid);
-
-            fetch("{:url('send/string') }", {
+            fetch("{:url('send/function') }", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/x-www-form-urlencoded"
@@ -363,7 +269,7 @@
             var deviceId = '{$deviceId}';
             setTimeout(function () {
                 updateChartData(deviceId);
-            }, 2000); 
+            }, 2000);
 
         }
         fetchDataAndDisplayCharts();

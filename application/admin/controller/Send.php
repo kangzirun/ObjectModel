@@ -28,11 +28,51 @@ class Send extends Backend
         $this->model = new \app\admin\model\Productcategory;
     }
 
-    public function propertyGet(){
+
+    /**
+     * property指令下发
+     */
+    public function property($deviceId, $pid, $propertyData)
+    {
+        $mqttService = new MQTTService();
+        //topic后缀
+        $suffix = '/property/get';
+
+        $message = [];
+        foreach ($propertyData as $data) {
+            $result = [
+                'id' => $data,
+                'value' => '',
+                'remark' => ''
+            ];
+            $message[] = $result;
+        }
+
+        // $mqttService->send($pid, $deviceId, $message, $suffix);
+
+        //先设默认值，后续做逻辑处理
+        $detail = '';
+        $sendlogModel = new Sendlog();
+        foreach($propertyData as $data){
+            $remark = '';
+            $result = [
+                'identifier' => $data,
+                'type' => 'property',
+                'value' => '',
+                'deviceid' => $deviceId,
+                'detail' => $detail,
+                'remark' => $remark
+            ];       
+            $sendlogModel->create($result);
+        }
 
     }
 
-    public function monitor(){
+    /**
+     * monitor指令下发，实时监测
+     */
+    public function monitor()
+    {
         $mqttService = new MQTTService();
 
         //topic后缀
@@ -60,7 +100,7 @@ class Send extends Backend
         $result = [
             'identifier' => 'monitor',
             'type' => 'function',
-            'value' => '监测间隔:'+$interval+' '+'监测次数:'+$count,
+            'value' => '监测间隔:' + $interval + ' ' + '监测次数:' + $count,
             'deviceid' => $deviceId,
             'detail' => $detail,
             'remark' => $remark
@@ -74,50 +114,7 @@ class Send extends Backend
     /**
      * function物模型下发
      */
-
-    public function integer()
-    {
-        $mqttService = new MQTTService();
-
-        //topic后缀
-        $suffix = '/function/get';
-        //参数
-        $deviceId = $this->request->post('deviceId');
-        $integerValue = $this->request->post('integerValue');
-        $identifier = $this->request->post('identifier');
-        $pid = $this->request->post('pid');
-        $remark = '场景联动触发';
-        $message = [
-            'id' => $identifier,
-            'value' => $integerValue,
-            'remark' => $remark
-        ];
-
-        Log::write('ID：' . $deviceId);
-        Log::write('参数：' . $integerValue);
-        Log::write('identifier:' . $identifier);
-        Log::write('pid:' . $pid);
-
-        // $mqttService->send($pid, $deviceId, $message, $suffix);
-
-        //先设默认值，后续做逻辑处理
-        $detail = '';
-
-        $result = [
-            'identifier' => $identifier,
-            'type' => 'function',
-            'value' => $integerValue,
-            'deviceid' => $deviceId,
-            'detail' => $detail,
-            'remark' => $remark
-        ];
-        $sendlogModel = new Sendlog();
-        $sendlogModel->create($result);
-
-        return $this->success();
-    }
-
-    public function bool()
+    public function function()
     {
         $mqttService = new MQTTService();
 
@@ -125,21 +122,21 @@ class Send extends Backend
         $suffix = '/function/get';
 
         $deviceId = $this->request->post('deviceId');
-        $boolValue = $this->request->post('boolValue');
+        $value = $this->request->post('value');
         $identifier = $this->request->post('identifier');
         $pid = $this->request->post('pid');
         $remark = '场景联动触发';
 
         $message = [
             'id' => $identifier,
-            'value' => $boolValue,
+            'value' => $value,
             'remark' => $remark
         ];
 
         // $mqttService->send($pid, $deviceId, $message, $suffix);
 
         Log::write('ID：' . $deviceId);
-        Log::write('参数：' . $boolValue);
+        Log::write('参数：' . $value);
         Log::write('identifier:' . $identifier);
         Log::write('pid:' . $pid);
 
@@ -149,91 +146,7 @@ class Send extends Backend
         $result = [
             'identifier' => $identifier,
             'type' => 'function',
-            'value' => $boolValue,
-            'deviceid' => $deviceId,
-            'detail' => $detail,
-            'remark' => $remark
-        ];
-        $sendlogModel = new Sendlog();
-        $sendlogModel->create($result);
-
-        $this->success('请求调度成功');
-    }
-
-    public function enum()
-    {
-        $mqttService = new MQTTService();
-
-        //topic后缀
-        $suffix = '/function/get';
-
-        $deviceId = $this->request->post('deviceId');
-        $enumValue = $this->request->post('enumValue');
-        $identifier = $this->request->post('identifier');
-        $pid = $this->request->post('pid');
-        $remark = '场景联动触发';
-
-        $message = [
-            'id' => $identifier,
-            'value' => $enumValue,
-            'remark' => $remark
-        ];
-
-        // $mqttService->send($pid, $deviceId, $message, $suffix);
-
-        Log::write('ID：' . $deviceId);
-        Log::write('参数：' . $enumValue);
-        Log::write('identifier:' . $identifier);
-        Log::write('pid:' . $pid);
-
-        //先设默认值，后续做逻辑处理
-        $detail = '';
-
-        $result = [
-            'identifier' => $identifier,
-            'type' => 'function',
-            'value' => $enumValue,
-            'deviceid' => $deviceId,
-            'detail' => $detail,
-            'remark' => $remark
-        ];
-        $sendlogModel = new Sendlog();
-        $sendlogModel->create($result);
-    }
-
-    public function string()
-    {
-        $mqttService = new MQTTService();
-
-        //topic后缀
-        $suffix = '/function/get';
-
-        $deviceId = $this->request->post('deviceId');
-        $stringValue = $this->request->post('stringValue');
-        $identifier = $this->request->post('identifier');
-        $pid = $this->request->post('pid');
-        $remark = '场景联动触发';
-
-        $message = [
-            'id' => $identifier,
-            'value' => $stringValue,
-            'remark' => $remark
-        ];
-
-        // $mqttService->send($pid, $deviceId, $message, $suffix);
-
-        Log::write('ID：' . $deviceId);
-        Log::write('参数：' . $stringValue);
-        Log::write('identifier:' . $identifier);
-        Log::write('pid:' . $pid);
-
-        //先设默认值，后续做逻辑处理
-        $detail = '';
-
-        $result = [
-            'identifier' => $identifier,
-            'type' => 'function',
-            'value' => $stringValue,
+            'value' => $value,
             'deviceid' => $deviceId,
             'detail' => $detail,
             'remark' => $remark

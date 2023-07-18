@@ -308,12 +308,12 @@ class Productmodel extends Backend
         Log::write($device);
         //根据设备id获取产品id，根据产品id获得类别为function的物模型
         $result = $deviceModel->getFunctionModelByDid($deviceId);
-
+        $pid = $device['product_id'];
         //显示设备模式、固件版本、设备编号、产品编号
         $this->view->assign('status', $device['status'] == 0 ? '离线模式' : '在线模式');
         $this->view->assign('version', 'Version  ' . $device['version']);
         $this->view->assign('deviceId', $deviceId);
-        $this->view->assign('pid', $device['product_id']);
+        $this->view->assign('pid', $pid);
 
         // 根据您的逻辑条件设置相应的变量值
         $showInteger = false; // 是否显示integer<div>
@@ -365,8 +365,10 @@ class Productmodel extends Backend
         $this->view->assign('showString', $showString);
         //根据拿到的结果判断数据类型
 
+        //拿到该设备所有属性物模型
         $resultBy = $deviceModel->getPropertyModelByDid($deviceId);
         $arrayContainer  = [];
+        $propertyData = [];
         foreach ($resultBy as $items) {
             $data = $items['definition'];
             $name = $items['name'];
@@ -383,15 +385,17 @@ class Productmodel extends Backend
                 'attributeValues' => []
             ];
             $arrayContainer[] = $arrayData;
+            $propertyData[] = $identifier;
+
         }
         $this->view->assign('attributeDataArray', json_encode($arrayContainer));
 
         /**
-         * TODO
          * 调用一次property/get
          */
+        $send = new Send();
+        $send->property($deviceId,$pid,$propertyData);
 
-         
         return $this->view->fetch();
     }
 
