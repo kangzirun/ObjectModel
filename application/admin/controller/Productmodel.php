@@ -374,6 +374,8 @@ class Productmodel extends Backend
             $name = $items['name'];
             $identifier = $items['identifier'];
             $unit = json_decode($data, true)['unit'];
+            $max = json_decode($data, true)['max'];
+            $min = json_decode($data, true)['min'];
             Log::write($name);
             Log::write($unit);
 
@@ -381,6 +383,8 @@ class Productmodel extends Backend
                 'title' => $name,
                 'unit' => $unit,
                 'identifier' => $identifier,
+                'max'=>$max,
+                'min'=>$min,
                 'attributeNames' => [],
                 'attributeValues' => []
             ];
