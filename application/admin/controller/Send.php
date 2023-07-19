@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\Device;
 use app\admin\model\Dversion;
 use app\admin\model\Sendlog;
 use app\common\controller\Backend;
@@ -49,7 +50,7 @@ class Send extends Backend
             'serverRecvTime'=>$serverRecvTime
         ];
 
-        $mqttService->send($productId,$clientid,$message,$suffix);
+        $mqttService->send($productId,$clientid,json_encode($message),$suffix);
 
 
     }
@@ -63,16 +64,12 @@ class Send extends Backend
         $deviceId = $this->request->post('deviceId');
         $pid = $this->request->post('pid');
 
+        $deivceModel = new Device();
+
         $regex = '/(\d+\.\d+)/';
         $matches = array();
         preg_match($regex, $version, $matches);
         $version = $matches[1];
-
-
-        Log::write('version:' . $version);
-        Log::write('deviceid:' . $deviceId);
-        Log::write('pid:' . $pid);
-
         $mqttService = new MQTTService();
         //topic后缀
         $suffix = '/ota/get';
@@ -91,7 +88,8 @@ class Send extends Backend
             'version' => $version,
             'downloadUrl' => $downloadUrl
         ];
-        // $mqttService->send($pid, $deviceId, $message, $suffix);
+
+        $mqttService->send($pid, $deviceId, json_encode($message), $suffix);
 
         //保存指令日志
         //先设默认值，后续做逻辑处理
@@ -128,7 +126,7 @@ class Send extends Backend
             $message[] = $result;
         }
 
-        // $mqttService->send($pid, $deviceId, $message, $suffix);
+        $mqttService->send($pid,$deviceId,json_encode($message),$suffix);
 
         //先设默认值，后续做逻辑处理
         $detail = '';
@@ -172,7 +170,7 @@ class Send extends Backend
         Log::write('deviceId' . $deviceId);
         Log::write('pid' . $pid);
 
-        // $mqttService->send($pid, $deviceId, $message, $suffix);
+        $mqttService->send($pid,$deviceId,json_encode($message),$suffix);
 
         //先设默认值，后续做逻辑处理
         $detail = '';
@@ -213,12 +211,12 @@ class Send extends Backend
             'remark' => $remark
         ];
 
-        // $mqttService->send($pid, $deviceId, $message, $suffix);
-
         Log::write('ID：' . $deviceId);
         Log::write('参数：' . $value);
         Log::write('identifier:' . $identifier);
         Log::write('pid:' . $pid);
+
+        $mqttService->send($pid,$deviceId,json_encode($message),$suffix);
 
         //先设默认值，后续做逻辑处理
         $detail = '';

@@ -24,46 +24,35 @@ class MQTTService
      * @param $clientId 客户端ID
      * @param @message 消息包
      */
-    public function send($pid, $clientId, $message,$suffix)
+
+    function basicEncode($username, $password)
+    {
+        $credentials = $username . ':' . $password;
+        $encodedCredentials = base64_encode($credentials);
+        return 'Basic ' . $encodedCredentials;
+    }
+    public function send($pid, $clientId, $message, $suffix)
     {
 
-        $config = [
-            'userName' => 'admin',
-            'password' => '123456qq',
-            'clientId' => '9d5F1j3W7g0r',
-            'keepAlive' => 60,
-            'protocolName' => 'MQTT', // or MQIsdp
-            'protocolLevel' => 4, // or 3, 5
-            'properties' => [], // optional in MQTT5
-            'delay' => 3000, // 3s
-            'maxAttempts' => 5,
-            'swooleConfig' => []
-        ];
 
-        Log::write('执行前');
+        Log::write('suffix:' . $suffix);
+        Log::write('deviceid:' . $clientId);
+        Log::write('pid:' . $pid);
 
-        $configObj = new ClientConfig($config);
 
-        Log::write('执行后');
-        $client = new Client('127.0.0.1', 1883, $configObj);
-        $client->connect();
-
+        $username = '2af84f674249812e';
+        $password = 'LPqW6Vbvhg71gLeS0eACtfO3l69CkNNW4JmfZYrRQ1oE';
+        $authorization = $this->basicEncode($username, $password);
         // $topic = '/'+$pid+'/'+$clientId+'/info/get';
-        $topic = '/2/9d5F1j3W7g0r/function/get';
+        $topic = '/' . $pid . '/' . $clientId . $suffix;
+        Log::write('message:' . $message);
 
-        $data = [
-            'id'=>'switch',
-            'value'=> 1,
-            'remark'=>'场景联动'
-        ];
-        $result = json_encode($data);
-        $client->publish($topic, $result);
+        $result = \fast\Http::post(
+            "http://localhost:18083/api/v5/publish",
+            json_encode(["payload" => $message, "clientid" => $clientId, "topic" => $topic]),
+            [CURLOPT_TIMEOUT => 30, CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: ' . $authorization]]
+        );
 
-        // $topics=[
-        //     $topic
-        // ];
-
-        // return $client->subscribe($topics);
-
+        Log::write('result:' . $result);
     }
 }
